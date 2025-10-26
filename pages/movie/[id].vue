@@ -161,17 +161,20 @@ onMounted(() => {
     testcall(params.id)
 })
 const testcall = async (id) => {
+    console.log(id)
     if (id) {
         try {
             const movie = await moviedb
                 .movieInfo({
                     id
                 })
-
-            const collection = await moviedb.collectionInfo({
-                id: movie.belongs_to_collection.id
-            })
-            console.log(movie.title)
+                if(movie.belongs_to_collection){
+                    const collection = await moviedb.collectionInfo({
+                        id: movie.belongs_to_collection.id
+                    })
+                    collectionData.value = collection
+                }
+            
             useHead({
                 title: `${movie.title} | No Pay. You Watch.`,
                 meta: [{
@@ -180,7 +183,7 @@ const testcall = async (id) => {
                 }, ],
             })
             // console.log(collection)
-            collectionData.value = collection
+            // collectionData.value = collection
             imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
             // searchPerson()
             gettIMDBData()
