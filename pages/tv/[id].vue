@@ -9,7 +9,7 @@
                     <p class="text-body-2 text-white">{{ movieData.overview }}</p>
 
                     <v-row class="py-4">
-                        <v-col cols='4' md="1" sm="12">
+                        <v-col cols='5' md="1" sm="12">
                             <p class="text-body-2 text-white mx-0">
                                 <v-icon icon="mdi-calendar-range" color="orange" class="mr-2"></v-icon> {{ movieData.first_air_date }}
                             </p>
@@ -46,9 +46,24 @@
                         <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined"></v-select>
                     </v-col>
                     <v-col cols="6" md="6" xs="6">
-                        <v-select label="Episode Number" :items="episodeNumberArray" item-title="episodeName" item-value="1" return-object variant="outlined"></v-select>
+                        <v-select label="Episode" :items="episodeNumberArray" item-title="episodeName" return-object variant="outlined"></v-select>
                     </v-col>
                 </v-row>
+
+                <div id="episodeGroup" v-if="episodeData">
+                    <v-card theme="dark" flat>
+                        <v-list lines="two">
+                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview" :title="`${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number)">
+                                <template v-slot:prepend>
+                                    <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`">
+                                        
+                                    </v-avatar>
+                                </template>
+                            </v-list-item>
+                        </v-list>
+
+                    </v-card>
+                </div>
             </section>
         </v-container>
 
@@ -161,10 +176,11 @@ const gettIMDBData = async () => {
     }
 
 }
-const playMovie = (id) => {
+const playEpisode = (id,season,episode) => {
     loaodingMovie.value = true
     ///embed/tv/{tmdbId}/{season}/{episode}
-    iframsrc.value = `https://www.vidking.net/embed/tv/${id}/1/1?color=e65100&autoPlay=true`
+    console.log(id)
+    iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
     setTimeout(() => {
         movieDialog.value = true
         loaodingMovie.value = false
@@ -183,14 +199,13 @@ const searchForEpisodes = async (seasonNumber) => {
             episodeNumberArray.value = []
             for (let e = 0; e < res.episodes.length; e++) {
                 const el = res.episodes[e];
-                console.log(el)
                 episodeNumberArray.value.push({
                     episodeNumber: el.episode_number,
                     id: el.episode_number,
                     episodeName: el.name
                 })
             }
-            //console.log(episodeNumberArray)
+            console.log(res)
             return episodeData.value = res
         }
     }
