@@ -46,12 +46,12 @@
                         <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined" @update:modelValue="handleSeasonChange"></v-select>
                     </v-col>
                     <v-col cols="6" md="6" xs="6">
-                        <v-select label="Episode" :items="episodeNumberArray" item-title="episodeName" return-object variant="outlined"></v-select>
+                        <v-select label="Episode" :items="episodeNumberArray" item-title="episodeName" return-object variant="outlined" @update:modelValue="handleEpisodeChange"></v-select>
                     </v-col>
                 </v-row>
 
                 <div id="episodeGroup" v-if="episodeData">
-                    <v-card theme="dark" flat>
+                    <v-card theme="dark" flat height="400" id="epiCard">
                         <v-list lines="two">
                             <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew)">
                                 <template v-slot:prepend>
@@ -117,6 +117,42 @@
             
         </v-card>
     </v-bottom-sheet>
+    <client-only>
+        <v-navigation-drawer
+        v-model="toggleEpisodeInfo"
+        temporary
+        color="grey-darken-4"
+        location="right"
+        width="300"
+        v-if="episodeDrawerInfo"
+      >
+      <v-card flat theme="dark">
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn icon="mdi-close" @click="episodeDrawerInfo =false"></v-btn>
+        </v-card-actions>
+        <v-img :src="`https://image.tmdb.org/t/p/original/${episodeDrawerInfo.poster}`"></v-img>
+        <v-card-text >
+            <h3 class="text-subtitle-1 font-weight-bold text-truncate">{{ episodeDrawerInfo.name }}</h3>
+            <p class="text-caption">{{ episodeDrawerInfo.overview }}</p>
+        
+        </v-card-text>
+      </v-card>
+        <!-- <v-list-item
+          prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
+          title="John Leider"
+        ></v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list density="compact" nav>
+          <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
+          <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
+        </v-list> -->
+      </v-navigation-drawer>
+    </client-only>
+      
+
 </v-main>
 </template>
 
@@ -142,7 +178,9 @@ const episodeNumberArray = ref([])
 const selectedSeason = ref({
     seasonNumber: 1
 })
+const toggleEpisodeInfo = ref(false)
 const errorPlayingEpisode = ref(false)
+const episodeDrawerInfo = ref()
 onMounted(() => {
     testcall(params.id)
 })
@@ -182,8 +220,12 @@ const testcall = async (id) => {
 
 }
 const handleSeasonChange = async (el) => {
-    console.log(el)
     searchForEpisodes(el.seasonNumber)
+}
+const handleEpisodeChange = async (el) => {
+    console.log(el)
+    episodeDrawerInfo.value = el
+    toggleEpisodeInfo.value = true
 }
 const gettIMDBData = async () => {
     const res = await $fetch(imdbInfo.value, {
@@ -223,13 +265,18 @@ const searchForEpisodes = async (seasonNumber) => {
             episodeNumberArray.value = []
             for (let e = 0; e < res.episodes.length; e++) {
                 const el = res.episodes[e];
+                console.log(el)
                 episodeNumberArray.value.push({
                     episodeNumber: el.episode_number,
                     id: el.episode_number,
-                    episodeName: el.name
+                    episodeName: el.name,
+                    airDate: el.air_date,
+                    name: el.name,
+                    poster: el.still_path,
+                    voteAverage: el.vote_average,
+                    overview: el.overview
                 })
             }
-            console.log(res)
             return episodeData.value = res
         }
     }
@@ -271,5 +318,8 @@ const getSeasons = async () => {
 
 .movie-insert {
     width: 100%;
+}
+#epiCard{
+    overflow-y: scroll;
 }
 </style>
