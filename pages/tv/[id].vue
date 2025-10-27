@@ -26,7 +26,7 @@
                         </v-chip>
                     </section>
                     <section id="play-button" class="my-2">
-                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playMovie(movieData.id)">
+                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
                         </v-btn>
                         <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
@@ -53,7 +53,7 @@
                 <div id="episodeGroup" v-if="episodeData">
                     <v-card theme="dark" flat>
                         <v-list lines="two">
-                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview" :title="`${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number)">
+                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew)">
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`">
                                         
@@ -103,6 +103,20 @@
             </v-list>
         </v-card>
     </v-bottom-sheet>
+    <v-bottom-sheet v-model="errorPlayingEpisode">
+
+        <v-card theme="dark">
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn icon="mdi-close" @click="errorPlayingEpisode = false"></v-btn>
+            </v-card-actions>
+            <v-card-text>
+                <h4 class="text-h6 font-weight-bold text-red">Error Playing Episode</h4>
+                <p class="body-1">This episode hasn't aired yet. Please wait until the air date. If it's the release date please give it 12 to 24 hours to update.</p>
+            </v-card-text>
+            
+        </v-card>
+    </v-bottom-sheet>
 </v-main>
 </template>
 
@@ -128,6 +142,7 @@ const episodeNumberArray = ref([])
 const selectedSeason = ref({
     seasonNumber: 1
 })
+const errorPlayingEpisode = ref(false)
 onMounted(() => {
     testcall(params.id)
 })
@@ -176,15 +191,20 @@ const gettIMDBData = async () => {
     }
 
 }
-const playEpisode = (id,season,episode) => {
+const playEpisode = (id,season,episode,crew) => {
     loaodingMovie.value = true
     ///embed/tv/{tmdbId}/{season}/{episode}
-    console.log(id)
-    iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
-    setTimeout(() => {
-        movieDialog.value = true
+    if(crew.length){
+        iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
+        setTimeout(() => {
+            movieDialog.value = true
+            loaodingMovie.value = false
+        }, 1000)
+    }else{
+        errorPlayingEpisode.value = true
         loaodingMovie.value = false
-    }, 1000)
+    }
+    
 
 }
 const searchForEpisodes = async (seasonNumber) => {
