@@ -27,7 +27,7 @@
                     </section>
                     <section id="play-button" class="my-2">
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playMovie(movieData.id)">
-                            <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play
+                            <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
                         </v-btn>
                         <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
                             <v-icon icon="mdi-group" class="text-white" color="black"></v-icon>
@@ -37,6 +37,21 @@
 
             </v-card>
         </v-img>
+        <v-container>
+            <section id="episodes">
+
+                <h3 class="text-h4 font-weight-bold">Episodes</h3>
+                <v-row class="my-2">
+                    <v-col cols="6" md="6" xs="6">
+                        <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined"></v-select>
+                    </v-col>
+                    <v-col cols="6" md="6" xs="6">
+                        <v-select label="Episode Number" :items="episodeNumberArray" item-title="episodeName" item-value="1" return-object variant="outlined"></v-select>
+                    </v-col>
+                </v-row>
+            </section>
+        </v-container>
+
     </div>
     <div v-else>
         <h1>loading...</h1>
@@ -91,24 +106,30 @@ const imdbData = ref(null)
 const collectionSheet = ref(false)
 const collectionData = ref()
 const router = useRouter()
+const episodeData = ref()
+const getSeasonsData = ref()
+const seasonNumberArray = ref([])
+const episodeNumberArray = ref([])
+const selectedSeason = ref({
+    seasonNumber: 1
+})
 onMounted(() => {
     testcall(params.id)
 })
 const testcall = async (id) => {
-    console.log(id)
     if (id) {
         try {
             const movie = await moviedb
                 .tvInfo({
                     id
                 })
-                if(movie.belongs_to_collection){
-                    const collection = await moviedb.collectionInfo({
-                        id: movie.belongs_to_collection.id
-                    })
-                    collectionData.value = collection
-                }
-            
+            if (movie.belongs_to_collection) {
+                const collection = await moviedb.collectionInfo({
+                    id: movie.belongs_to_collection.id
+                })
+                collectionData.value = collection
+            }
+
             useHead({
                 title: `${movie.name} | No Pay. You Watch.`,
                 meta: [{
@@ -116,8 +137,9 @@ const testcall = async (id) => {
                     content: `EVerything about kanoee`
                 }, ],
             })
-            // console.log(movie)
-            if(movie.imdb_id){
+            //console.log(movie)
+            getSeasons()
+            if (movie.imdb_id) {
                 imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
                 gettIMDBData()
             }
@@ -149,13 +171,51 @@ const playMovie = (id) => {
     }, 1000)
 
 }
-const searchPerson = async (person) => {
-    console.log(person)
-    if (person) {
-        const personData = await moviedb.searchPerson(person)
-        return router.push({
-            path: `/actor/${personData.results[0].id}/`
+const searchForEpisodes = async (seasonNumber) => {
+    if (params.id) {
+        let url = `https://api.themoviedb.org/3/tv/${params.id}/season/${seasonNumber}?api_key=73ae87f4ead565385079a234d8d1e7a6`
+        const res = await $fetch(url, {
+            method: 'GET'
         })
+
+        if (res) {
+            //console.log(res)
+            episodeNumberArray.value = []
+            for (let e = 0; e < res.episodes.length; e++) {
+                const el = res.episodes[e];
+                console.log(el)
+                episodeNumberArray.value.push({
+                    episodeNumber: el.episode_number,
+                    id: el.episode_number,
+                    episodeName: el.name
+                })
+            }
+            //console.log(episodeNumberArray)
+            return episodeData.value = res
+        }
+    }
+
+}
+const getSeasons = async () => {
+    // console.log(person)
+    if (params.id) {
+        const datad = await moviedb.tvInfo({
+            id: params.id
+        })
+        for (let s = 0; s < datad.seasons.length; s++) {
+            const el = datad.seasons[s];
+            //console.log(el)
+            if (s != 0) {
+                seasonNumberArray.value.push({
+                    seasonNumber: el.season_number,
+                    episodeCount: el.episode_count,
+                    id: el.id
+                })
+            }
+
+        }
+        searchForEpisodes('1')
+        return getSeasonsData.value = datad
     }
 
 }
