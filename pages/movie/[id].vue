@@ -182,8 +182,6 @@ const testcall = async (id) => {
                     content: `EVerything about kanoee`
                 }, ],
             })
-            // console.log(collection)
-            // collectionData.value = collection
             imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
             // searchPerson()
             gettIMDBData()

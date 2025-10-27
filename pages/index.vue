@@ -49,7 +49,7 @@ const selectedMovie = ref(null)
 const router = useRouter()
 onMounted(() => {
     testcall()
-    popularMovies()
+    //popularMovies()
 })
 useHead({
     title: `No Pay. You Watch.`,
@@ -63,7 +63,7 @@ const testcall = async (movieString) => {
         let englishMovies = []
         try {
             const movie = await moviedb
-                .searchMovie({
+                .searchMulti({
                     query: movieString,
                     include_adult: true,
                     region: 'NA',
@@ -72,6 +72,9 @@ const testcall = async (movieString) => {
                 movie.results.forEach(element => {
                     if(element.original_language === 'en' && element.backdrop_path && element.release_date != ''){
                         console.log(element)
+                        if(element.name){
+                            element.original_title = element.name
+                        }
                         englishMovies.push(element)
                     }
                 });
@@ -84,7 +87,7 @@ const testcall = async (movieString) => {
 
 }
 const popularMovies  = async() => {
-    const popular = await moviedb.movieNowPlaying()
+    const popular = await moviedb.searchMulti('IT')
     popular.results.forEach(element => {
 
         if(element.original_language === 'en'){
@@ -94,12 +97,17 @@ const popularMovies  = async() => {
 }
 const onInput = val => {
     if (!val) return false
-    if (val.length > 2) {
+    if (val.length > 1) {
         testcall(val.toLowerCase())
         console.log(searchedMovies)
     }
     if(selectedMovie.value){
-        return router.push({ path: `/movie/${selectedMovie.value.id}/`})
+        if(selectedMovie.value.media_type === 'tv'){
+            return router.push({ path: `/tv/${selectedMovie.value.id}/`})
+        }else{
+            return router.push({ path: `/movie/${selectedMovie.value.id}/`})
+        }
+        
     }
     //router.push({ path: `/movie/${selectedMovie.value.id}/`})
     // Do Fetching Data Here
