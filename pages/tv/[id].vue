@@ -43,7 +43,7 @@
                 <h3 class="text-h4 font-weight-bold">Episodes</h3>
                 <v-row class="my-2">
                     <v-col cols="6" md="6" xs="6">
-                        <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined"></v-select>
+                        <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined" @update:modelValue="handleSeasonChange"></v-select>
                     </v-col>
                     <v-col cols="6" md="6" xs="6">
                         <v-select label="Episode" :items="episodeNumberArray" item-title="episodeName" return-object variant="outlined"></v-select>
@@ -180,6 +180,10 @@ const testcall = async (id) => {
         }
     }
 
+}
+const handleSeasonChange = async (el) => {
+    console.log(el)
+    searchForEpisodes(el.seasonNumber)
 }
 const gettIMDBData = async () => {
     const res = await $fetch(imdbInfo.value, {
