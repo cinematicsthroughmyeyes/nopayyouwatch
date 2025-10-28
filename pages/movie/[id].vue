@@ -31,12 +31,12 @@
                         </v-chip>
                     </section>
                     <section id="play-button" class="my-2">
-                        
+
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" v-if="movieData.runtime !== 0" :disabled="loaodingMovie" @click="playMovie(movieData.id, movieData)">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play
                         </v-btn>
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" v-else :disabled="true">
-                             Movie Not Available
+                            Movie Not Available
                         </v-btn>
                         <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
                             <v-icon icon="mdi-group" class="text-white" color="black"></v-icon>
@@ -55,14 +55,11 @@
                     <p class="text-right mt-1 text-decoration-underline">See More</p>
                 </v-col>
             </v-row>
-            
+
             <v-row v-if="trailerVideos.length > 0">
-                <v-col cols="12" md="4" xs="12" v-for=" (yt,ytk) in trailerVideos" :key="ytk" >
+                <v-col cols="12" md="4" xs="12" v-for=" (yt,ytk) in trailerVideos" :key="ytk">
                     <v-card class="rounded-lg" v-if="ytk < 3">
-                        <LiteYouTubeEmbed
-                        :id="yt.key"
-                        :title="yt.name"
-                    />
+                        <LiteYouTubeEmbed :id="yt.key" :title="yt.name" />
                     </v-card>
                 </v-col>
             </v-row>
@@ -70,7 +67,7 @@
                 <v-container>
                     <p class="text-subtitle-2">There are no trailers for this movie.</p>
                 </v-container>
-                
+
             </div>
         </v-container>
         <v-container>
@@ -146,13 +143,47 @@
 
                 <v-btn icon="mdi-close" @click="movieDialog = false"></v-btn>
             </v-card-actions>
-            <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen > </iframe>
-            <v-toolbar :title="movieDialogData.original_title" density="compact" color="orange-darken-4" :elevation="0" class="border-b-md"></v-toolbar>
-            <v-card-text>
+            <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen> </iframe>
+            <v-toolbar :title="movieDialogData.original_title" density="compact" color="orange-darken-4" :elevation="0" class="border-b-md">
+                <template v-slot:append>
+        <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
+      </template>
+            </v-toolbar>
+            <!-- <v-card-actions>
 
-                <!-- {{ movieDialogData }} -->
-                <!-- <h3>{{  }}</h3> -->
-            </v-card-text>
+                <v-spacer></v-spacer>
+
+                <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
+            </v-card-actions> -->
+            <v-expand-transition>
+                <div v-show="show" class="bg-orange-darken-1">
+                    <v-divider></v-divider>
+
+                    <v-card-text>
+                         <p class="body-1 pa-3 bg-orange-darken-1 rounded-lg">{{ movieDialogData.overview }}</p>
+                    </v-card-text>
+                </div>
+            </v-expand-transition>
+            <v-card-actions>
+                <v-row>
+                    <v-col cols="4" md="4" xs="4">
+                        <v-btn  block size="x-large">
+                            <v-icon icon="mdi-bookmark"></v-icon>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="4" md="4" xs="4">
+                        <v-btn  block size="x-large">
+                            <v-icon icon="mdi-plus"></v-icon>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="4" md="4" xs="4">
+                        <v-btn  block size="x-large">
+                            <v-icon icon="mdi-account"></v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                
+            </v-card-actions>
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -197,7 +228,8 @@ const collectionSheet = ref(false)
 const collectionData = ref()
 const trailerVideos = ref([])
 const router = useRouter()
-const movieDialogData =ref()
+const movieDialogData = ref()
+const show = ref(false)
 onMounted(() => {
     testcall(params.id)
     gettMovieVideos()
@@ -209,13 +241,13 @@ const testcall = async (id) => {
                 .movieInfo({
                     id
                 })
-                if(movie.belongs_to_collection){
-                    const collection = await moviedb.collectionInfo({
-                        id: movie.belongs_to_collection.id
-                    })
-                    collectionData.value = collection
-                }
-            
+            if (movie.belongs_to_collection) {
+                const collection = await moviedb.collectionInfo({
+                    id: movie.belongs_to_collection.id
+                })
+                collectionData.value = collection
+            }
+
             useHead({
                 title: `${movie.title} | No Pay. You Watch.`,
                 meta: [{
@@ -253,14 +285,14 @@ const gettMovieVideos = async () => {
     for (let index = 0; index < moreVideos.results.length; index++) {
         const r = moreVideos.results[index];
         console.log(r)
-        if(r.official && r.type === 'Trailer'){
+        if (r.official && r.type === 'Trailer') {
             trailerVideos.value.push(r)
         }
     }
 }
 
 //personMovieCredits
-const playMovie = (id ,data) => {
+const playMovie = (id, data) => {
     loaodingMovie.value = true
     iframsrc.value = ``
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
