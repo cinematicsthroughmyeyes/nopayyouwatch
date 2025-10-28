@@ -4,7 +4,10 @@
         <v-toolbar title="Profile" color="orange-darken-4" :elevation="0" class="border-b-md"></v-toolbar>
         <div class="actor-image text-center pa-6 bg-orange-darken-3">
             <v-avatar :image="`https://image.tmdb.org/t/p/w500/${personData.profile_path}`" size="180"></v-avatar>
-            <h1 class="text-h5 mt-2 font-weight-bold">{{ personData.name }}</h1>
+            <h1 class="text-h5 mt-2 font-weight-bold">{{ personData.name || 'Unknown' }}</h1>
+            <p class="text-caption">{{ personData.place_of_birth || 'Unknown' }}</p>
+            <p class="body-1 font-weight-bold">{{ personData.known_for_department || 'Unknown' }}</p>
+            <!-- <pre>{{ personData }}</pre> -->
         </div>
     </section>
 
@@ -19,7 +22,7 @@
                         <h3 class="text-subtitle-1 text-right font-weight-bold" v-else>Actor <span class="font-italic">({{ actorCreditsNumber }})</span></h3>
                     </div>
 
-                    <v-list lines="two" theme="dark" height="400">
+                    <v-list lines="two" theme="dark" height="400" v-if="actorCredits.length">
                         <v-list-item v-for="folder in actorCredits" :key="folder.title">
                             <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
                             <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.character || 'Not specified' }}</v-list-item-subtitle>
@@ -38,6 +41,12 @@
                         </v-list-item>
 
                     </v-list>
+                    <div v-else>
+                        <v-card height="400" theme="dark">
+                             <p class="text-center pa-3">No Data</p>
+                        </v-card>
+                       
+                    </div>
                     </div>
                 </v-col>
                 <v-col cols="12" md="6" xs="12" >
@@ -45,7 +54,7 @@
                         <div class="py-2">
                         <h3 class="text-subtitle-1 text-right font-weight-bold">Other <span class="font-italic">({{ actorCastsNumber }})</span></h3>
                     </div>
-                    <v-list lines="two" theme="dark" height="400" class="rounded-lg ">
+                    <v-list lines="two" theme="dark" height="400" class="rounded-lg " v-if="actorCastCredits.length">
                         <v-list-item v-for="folder in actorCastCredits" :key="folder.title">
                             <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
                             <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.job || 'Not specified' }}</v-list-item-subtitle>
@@ -64,6 +73,12 @@
                         </v-list-item>
 
                     </v-list>
+                    <div v-else>
+                        <v-card height="400" theme="dark">
+                             <p class="text-center pa-3">No Data</p>
+                        </v-card>
+                       
+                    </div>
                     </div>
                     
                 </v-col>
