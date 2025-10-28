@@ -25,6 +25,7 @@
                             {{ mChip.name }}
                         </v-chip>
                     </section>
+                    
                     <section id="play-button" class="my-2">
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
@@ -38,6 +39,20 @@
             </v-card>
         </v-img>
         <v-container>
+            
+        <section class="bg-grey-darken-3 pa-3 rounded-lg mb-3 border-lg" v-if="movieData.networks">
+                <p class="text-subtitle-1 font-weight-bold">Aired on:</p>
+                <v-row>
+                        <v-col cols="12" md="2" xs="3" v-for="(network,nk) in movieData.networks" :key="nk">
+                            <!-- {{ network }} -->
+                            <!-- <v-img :src="`https://image.tmdb.org/t/p/w164_and_h164_bestv2/${network.logo_path}`"></v-img> -->
+                            <span class="text-caption">{{ network.name }}</span>
+                        </v-col>
+                    </v-row>
+            
+        </section>
+            
+            
             <section id="episodes">
 
                 <h3 class="text-h4 font-weight-bold">Episodes</h3>
@@ -123,32 +138,34 @@
         temporary
         color="grey-darken-4"
         location="right"
-        width="300"
+        width="350"
         v-if="episodeDrawerInfo"
       >
       <v-card flat theme="dark">
-        <v-card-actions>
+        <v-card-actions class="py-1">
             <v-spacer></v-spacer>
             <v-btn icon="mdi-close" @click="episodeDrawerInfo =false"></v-btn>
         </v-card-actions>
         <v-img :src="`https://image.tmdb.org/t/p/original/${episodeDrawerInfo.poster}`"></v-img>
         <v-card-text >
-            <h3 class="text-subtitle-1 font-weight-bold text-truncate">{{ episodeDrawerInfo.name }}</h3>
-            <p class="text-caption">{{ episodeDrawerInfo.overview }}</p>
-        
+            <h3 class="text-subtitle-1 py-2 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeDrawerInfo.name }}</h3>
+            <div class="ml-2">
+                <p class="text-caption"><span class="font-weight-bold">Episode:</span> {{ episodeDrawerInfo.episodeNumber }}</p>
+                <p class="text-caption"><span class="font-weight-bold">Aired Date:</span> {{ episodeDrawerInfo.airDate }}</p>
+            </div>
+            
+            <div class="py-2 px-2 mt-3 bg-grey-darken-3 rounded-lg">
+                <p class="text-subtitle-2 font-weight-bold">Summary:</p>
+                <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
+            </div>
+            
+            
+            
         </v-card-text>
       </v-card>
-        <!-- <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
-          title="John Leider"
-        ></v-list-item>
-
-        <v-divider></v-divider>
-
-        <v-list density="compact" nav>
-          <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
-          <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
-        </v-list> -->
+      <section id="playButtonDrawer">
+        <v-btn block color="orange-darken-4">play Episode</v-btn>
+      </section>
       </v-navigation-drawer>
     </client-only>
       
@@ -223,7 +240,7 @@ const handleSeasonChange = async (el) => {
     searchForEpisodes(el.seasonNumber)
 }
 const handleEpisodeChange = async (el) => {
-    console.log(el)
+    // console.log(el)
     episodeDrawerInfo.value = el
     toggleEpisodeInfo.value = true
 }
@@ -261,11 +278,11 @@ const searchForEpisodes = async (seasonNumber) => {
         })
 
         if (res) {
-            //console.log(res)
+            console.log(res)
             episodeNumberArray.value = []
             for (let e = 0; e < res.episodes.length; e++) {
                 const el = res.episodes[e];
-                console.log(el)
+                // console.log(el)
                 episodeNumberArray.value.push({
                     episodeNumber: el.episode_number,
                     id: el.episode_number,
@@ -321,5 +338,10 @@ const getSeasons = async () => {
 }
 #epiCard{
     overflow-y: scroll;
+}
+#playButtonDrawer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 </style>
