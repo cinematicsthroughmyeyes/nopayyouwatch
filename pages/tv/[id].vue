@@ -40,12 +40,10 @@
         </v-img>
         <v-container>
             
-        <section class="bg-grey-darken-3 pa-3 rounded-lg mb-3 border-lg" v-if="movieData.networks">
+        <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
                 <p class="text-subtitle-1 font-weight-bold">Aired on:</p>
                 <v-row>
                         <v-col cols="12" md="2" xs="3" v-for="(network,nk) in movieData.networks" :key="nk">
-                            <!-- {{ network }} -->
-                            <!-- <v-img :src="`https://image.tmdb.org/t/p/w164_and_h164_bestv2/${network.logo_path}`"></v-img> -->
                             <span class="text-caption">{{ network.name }}</span>
                         </v-col>
                     </v-row>
@@ -53,9 +51,9 @@
         </section>
             
             
-            <section id="episodes">
+            <section id="episodes" class="mt-3">
 
-                <h3 class="text-h4 font-weight-bold">Episodes</h3>
+                <h3 class="text-h4 font-weight-bold ">Episodes</h3>
                 <v-row class="my-2">
                     <v-col cols="6" md="6" xs="6">
                         <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined" @update:modelValue="handleSeasonChange"></v-select>
@@ -308,13 +306,11 @@ const getSeasons = async () => {
         for (let s = 0; s < datad.seasons.length; s++) {
             const el = datad.seasons[s];
             //console.log(el)
-            if (s != 0) {
                 seasonNumberArray.value.push({
                     seasonNumber: el.season_number,
                     episodeCount: el.episode_count,
                     id: el.id
                 })
-            }
 
         }
         searchForEpisodes('1')
