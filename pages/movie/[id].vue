@@ -42,8 +42,36 @@
 
             </v-card>
         </v-img>
+        <v-container class="mt-5">
+            <v-row>
+                <v-col cols="6" md="10" xs="6" class="pa-0">
+                    <h3 class="text-h5">Trailers</h3>
+                </v-col>
+                <v-col cols="6" md="2" xs="6" v-if="trailerVideos.length > 1" class="pa-0">
+                    <p class="text-right mt-3 text-decoration-underline">See More</p>
+                </v-col>
+            </v-row>
+            
+            <v-row>
+                <v-col cols="6" md="4" xs="4" v-for=" (yt,ytk) in trailerVideos" :key="ytk" >
+                    <v-card class="rounded-lg" v-if="ytk < 3">
+                        <LiteYouTubeEmbed
+                        :id="yt.key"
+                        :title="yt.name"
+                    />
+                    </v-card>
+                    <!-- {{ yt }} -->
+                    
+                </v-col>
+            </v-row>
+            <!-- {{ trailerVideos }}
+            <LiteYouTubeEmbed
+    id="dQw4w9WgXcQ"
+    title="Rick Astley - Never Gonna Give You Up (Official Music Video)"
+  /> -->
+        </v-container>
         <v-container>
-            <h3 class="text-h4 my-3">Cast</h3>
+            <h3 class="text-h5 my-3">Cast</h3>
 
             <section id="cast" v-if="imdbData">
                 <v-row>
@@ -148,6 +176,8 @@ import {
     MovieDb
 } from 'moviedb-promise'
 const moviedb = new MovieDb('73ae87f4ead565385079a234d8d1e7a6')
+import LiteYouTubeEmbed from 'vue-lite-youtube-embed'
+import 'vue-lite-youtube-embed/style.css'
 const movieData = ref()
 const movieDialog = ref(false)
 const iframsrc = ref('')
@@ -156,6 +186,7 @@ const imdbInfo = ref('')
 const imdbData = ref(null)
 const collectionSheet = ref(false)
 const collectionData = ref()
+const trailerVideos = ref([])
 const router = useRouter()
 onMounted(() => {
     testcall(params.id)
@@ -205,17 +236,17 @@ const gettIMDBData = async () => {
 
 }
 const gettMovieVideos = async () => {
+    //personInfo('10297')
     //movieVideos
-    const movieVideos = await moviedb.personInfo('10297')
-    console.log(movieVideos)
+    const moreVideos = await moviedb.movieVideos(params.id)
     //console.log(movieVideos)
-    // for (let index = 0; index < movieVideos.results.length; index++) {
-    //     const r = movieVideos.results[index];
-    //     //console.log(r)
-    //     if(r.official && r.type === 'Trailer'){
-    //         console.log(r)
-    //     }
-    // }
+    for (let index = 0; index < moreVideos.results.length; index++) {
+        const r = moreVideos.results[index];
+        console.log(r)
+        if(r.official && r.type === 'Trailer'){
+            trailerVideos.value.push(r)
+        }
+    }
 }
 
 //personMovieCredits
