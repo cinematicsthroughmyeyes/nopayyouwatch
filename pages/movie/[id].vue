@@ -159,9 +159,9 @@ const collectionData = ref()
 const router = useRouter()
 onMounted(() => {
     testcall(params.id)
+    gettMovieVideos()
 })
 const testcall = async (id) => {
-    console.log(id)
     if (id) {
         try {
             const movie = await moviedb
@@ -204,6 +204,21 @@ const gettIMDBData = async () => {
     }
 
 }
+const gettMovieVideos = async () => {
+    //movieVideos
+    const movieVideos = await moviedb.personInfo('10297')
+    console.log(movieVideos)
+    //console.log(movieVideos)
+    // for (let index = 0; index < movieVideos.results.length; index++) {
+    //     const r = movieVideos.results[index];
+    //     //console.log(r)
+    //     if(r.official && r.type === 'Trailer'){
+    //         console.log(r)
+    //     }
+    // }
+}
+
+//personMovieCredits
 const playMovie = (id) => {
     loaodingMovie.value = true
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
@@ -214,7 +229,6 @@ const playMovie = (id) => {
 
 }
 const searchPerson = async (person) => {
-    console.log(person)
     if (person) {
         const personData = await moviedb.searchPerson(person)
         return router.push({
