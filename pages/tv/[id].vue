@@ -155,14 +155,13 @@
                 <p class="text-subtitle-2 font-weight-bold">Summary:</p>
                 <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
             </div>
-            
-            
+            <div class="mt-3">
+                <v-btn block color="orange-darken-4">play Episode</v-btn>
+            </div>
             
         </v-card-text>
+        
       </v-card>
-      <section id="playButtonDrawer">
-        <v-btn block color="orange-darken-4">play Episode</v-btn>
-      </section>
       </v-navigation-drawer>
     </client-only>
       

@@ -44,16 +44,16 @@
         </v-img>
         <v-container class="mt-5">
             <v-row>
-                <v-col cols="6" md="10" xs="6" class="pa-0">
+                <v-col cols="6" md="10" xs="6" class="py-0">
                     <h3 class="text-h5">Trailers</h3>
                 </v-col>
-                <v-col cols="6" md="2" xs="6" v-if="trailerVideos.length > 1" class="pa-0">
-                    <p class="text-right mt-3 text-decoration-underline">See More</p>
+                <v-col cols="6" md="2" xs="6" v-if="trailerVideos.length > 1" class="py-0">
+                    <p class="text-right mt-1 text-decoration-underline">See More</p>
                 </v-col>
             </v-row>
             
             <v-row>
-                <v-col cols="6" md="4" xs="4" v-for=" (yt,ytk) in trailerVideos" :key="ytk" >
+                <v-col cols="12" md="4" xs="12" v-for=" (yt,ytk) in trailerVideos" :key="ytk" >
                     <v-card class="rounded-lg" v-if="ytk < 3">
                         <LiteYouTubeEmbed
                         :id="yt.key"

@@ -110,11 +110,11 @@
                             <p class="text-subtitle-2 font-weight-bold">Summary:</p>
                             <p class="text-caption">{{ naviDrawerData.overview.substring(0, 300) }}</p>
                         </div>
-
+                        <div class="mt-3">
+                            <v-btn block color="orange-darken-4" :to="`/movie/${naviDrawerData.id}/`">Go To Movie</v-btn>
+                        </div>
                     </v-card-text>
-                    <v-card-actions>
-                        <v-btn variant="outlined" block color="orange-dakren-4" :to="`/movie/${naviDrawerData.id}/`"> Go To Movie</v-btn>
-                    </v-card-actions>
+
                 </v-card>
             </v-navigation-drawer>
         </client-only>
