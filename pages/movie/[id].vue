@@ -10,17 +10,17 @@
 
                     <v-row class="py-4">
                         <v-col cols='4' md="1" sm="12">
-                            <p class="text-body-2 text-white mx-0">
+                            <p class="text-caption text-white mx-0">
                                 <v-icon icon="mdi-calendar-range" color="orange" class="mr-2"></v-icon> {{ movieData.release_date }}
                             </p>
                         </v-col>
                         <v-col cols='4' md="1" sm="12">
-                            <p class="text-body-2 text-white mx-0">
+                            <p class="text-caption text-white mx-0">
                                 <v-icon icon="mdi-clock-outline" color="orange" class="mr-2"></v-icon>{{ movieData.runtime }} minutes
                             </p>
                         </v-col>
-                        <v-col cols='4' md="1" sm="12">
-                            <p class="text-body-2 text-white mx-0">
+                        <v-col cols='3' md="1" sm="12">
+                            <p class="text-caption text-white mx-0">
                                 <v-icon icon="mdi-star" color="yellow" class="mr-2"></v-icon>{{ movieData.vote_average.toFixed(1) }}
                             </p>
                         </v-col>
@@ -115,7 +115,7 @@
 
                 <v-btn icon="mdi-close" @click="movieDialog = false"></v-btn>
             </v-card-actions>
-            <iframe :src="iframsrc" width="100%" height="600" frameborder="0" allowfullscreen> </iframe>
+            <iframe :src="iframsrc" width="100%" height="600" frameborder="0" allowfullscreen > </iframe>
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">

@@ -41,7 +41,7 @@
         <v-container>
             
         <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
-                <p class="text-subtitle-1 font-weight-bold">Aired on:</p>
+                <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
                 <v-row>
                         <v-col cols="12" md="2" xs="3" v-for="(network,nk) in movieData.networks" :key="nk">
                             <span class="text-caption">{{ network.name }}</span>
@@ -68,9 +68,8 @@
                         <v-list lines="two">
                             <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew)">
                                 <template v-slot:prepend>
-                                    <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`">
-                                        
-                                    </v-avatar>
+                                    <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" v-if="episodes.still_path"></v-avatar>
+                                    <v-avatar icon="mdi-skull" v-else></v-avatar>
                                 </template>
                             </v-list-item>
                         </v-list>
