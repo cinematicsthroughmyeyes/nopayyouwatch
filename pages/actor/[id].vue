@@ -112,6 +112,9 @@
                         </div>
 
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn variant="outlined" block color="orange-dakren-4" :to="`/movie/${naviDrawerData.id}/`"> Go To Movie</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-navigation-drawer>
         </client-only>
@@ -174,7 +177,7 @@ const getPersonMovieCredits = async () => {
     }
 }
 const openNaviDrawer = async (data) => {
-    //console.log(data)
+    console.log(data)
     naviDrawerData.value = data
     actorDrawer.value = true
 }
