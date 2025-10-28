@@ -31,8 +31,12 @@
                         </v-chip>
                     </section>
                     <section id="play-button" class="my-2">
-                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playMovie(movieData.id)">
+                        
+                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" v-if="movieData.runtime !== 0" :disabled="loaodingMovie" @click="playMovie(movieData.id, movieData)">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play
+                        </v-btn>
+                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" v-else :disabled="true">
+                             Movie Not Available
                         </v-btn>
                         <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
                             <v-icon icon="mdi-group" class="text-white" color="black"></v-icon>
@@ -52,7 +56,7 @@
                 </v-col>
             </v-row>
             
-            <v-row>
+            <v-row v-if="trailerVideos.length > 0">
                 <v-col cols="12" md="4" xs="12" v-for=" (yt,ytk) in trailerVideos" :key="ytk" >
                     <v-card class="rounded-lg" v-if="ytk < 3">
                         <LiteYouTubeEmbed
@@ -60,15 +64,14 @@
                         :title="yt.name"
                     />
                     </v-card>
-                    <!-- {{ yt }} -->
-                    
                 </v-col>
             </v-row>
-            <!-- {{ trailerVideos }}
-            <LiteYouTubeEmbed
-    id="dQw4w9WgXcQ"
-    title="Rick Astley - Never Gonna Give You Up (Official Music Video)"
-  /> -->
+            <div v-else>
+                <v-container>
+                    <p class="text-subtitle-2">There are no trailers for this movie.</p>
+                </v-container>
+                
+            </div>
         </v-container>
         <v-container>
             <h3 class="text-h5 my-3">Cast</h3>
@@ -143,7 +146,13 @@
 
                 <v-btn icon="mdi-close" @click="movieDialog = false"></v-btn>
             </v-card-actions>
-            <iframe :src="iframsrc" width="100%" height="600" frameborder="0" allowfullscreen > </iframe>
+            <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen > </iframe>
+            <v-toolbar :title="movieDialogData.original_title" density="compact" color="orange-darken-4" :elevation="0" class="border-b-md"></v-toolbar>
+            <v-card-text>
+
+                <!-- {{ movieDialogData }} -->
+                <!-- <h3>{{  }}</h3> -->
+            </v-card-text>
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -188,6 +197,7 @@ const collectionSheet = ref(false)
 const collectionData = ref()
 const trailerVideos = ref([])
 const router = useRouter()
+const movieDialogData =ref()
 onMounted(() => {
     testcall(params.id)
     gettMovieVideos()
@@ -250,9 +260,12 @@ const gettMovieVideos = async () => {
 }
 
 //personMovieCredits
-const playMovie = (id) => {
+const playMovie = (id ,data) => {
     loaodingMovie.value = true
+    iframsrc.value = ``
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
+    // console.log(data)
+    movieDialogData.value = data
     setTimeout(() => {
         movieDialog.value = true
         loaodingMovie.value = false
