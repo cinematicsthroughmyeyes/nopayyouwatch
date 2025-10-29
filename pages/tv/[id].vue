@@ -51,9 +51,11 @@
         </section>
             
             
-            <section id="episodes" class="mt-3">
-
-                <h3 class="text-h4 font-weight-bold ">Episodes</h3>
+            <section id="episodes" class="my-3 ">
+                <div class="py-2">
+                    <h3 class="text-h4 font-weight-bold ">Episodes</h3>
+                </div>
+                
                 <v-row class="my-2">
                     <v-col cols="6" md="6" xs="6">
                         <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined" @update:modelValue="handleSeasonChange"></v-select>
@@ -76,6 +78,27 @@
 
                     </v-card>
                 </div>
+            </section>
+            <section id="youMayLike" class="py-5">
+                <div class="my-5">
+                    <h4 class="text-h4 font-weight-bold">Popular Shows</h4>
+                </div>
+                
+                <v-row v-if="popularShows.length">
+                    <v-col cols="4" md="3" xs="6" v-for="(popular,popKey) in popularShows" :key="popKey">
+                        <v-card class="rounded-lg">
+                            <nuxt-link :to="`/tv/${popular.id}/`">
+                                <v-img :src="`https://image.tmdb.org/t/p/w500/${popular.poster_path}`"></v-img>
+                            </nuxt-link>
+                        </v-card>
+                        
+                        <!-- :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" -->
+                         <!-- {{ popular.backdrop_path }} -->
+                    </v-col>
+                </v-row>
+                <v-card flat>
+
+                </v-card>
             </section>
         </v-container>
 
@@ -194,6 +217,7 @@ const selectedSeason = ref({
 const toggleEpisodeInfo = ref(false)
 const errorPlayingEpisode = ref(false)
 const episodeDrawerInfo = ref()
+const popularShows = ref([])
 onMounted(() => {
     testcall(params.id)
 })
@@ -311,10 +335,33 @@ const getSeasons = async () => {
                 })
 
         }
+        
         searchForEpisodes('1')
+        getTvSimilars()
         return getSeasonsData.value = datad
     }
 
+}
+const getTvSimilars = async () => {
+    const datad = await moviedb.tvPopular()
+
+    if(datad){
+        let arr = []
+        for (let index = 0; index < 12; index++) {
+            const pop = datad.results[index];
+            
+            if(pop.original_language === 'en' && pop.poster_path && pop.id != params.id){
+                arr.push(pop)
+            }
+        }
+        if(arr.length){
+            arr.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));
+            popularShows.value = arr
+        }   
+        
+
+    }
+    //console.log(datad)
 }
 </script>
 

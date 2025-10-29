@@ -255,7 +255,7 @@ const testcall = async (id) => {
             imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
             // searchPerson()
             gettIMDBData()
-            // console.log(movie)
+            console.log(movie)
             return movieData.value = movie
 
         } catch (error) {
