@@ -25,7 +25,7 @@
                             {{ mChip.name }}
                         </v-chip>
                     </section>
-                    
+
                     <section id="play-button" class="my-2">
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
@@ -39,23 +39,22 @@
             </v-card>
         </v-img>
         <v-container>
-            
-        <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
+
+            <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
                 <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
                 <v-row>
-                        <v-col cols="4" md="2" xs="4" v-for="(network,nk) in movieData.networks" :key="nk">
-                            <span class="text-caption">{{ network.name }}</span>
-                        </v-col>
-                    </v-row>
-            
-        </section>
-            
-            
+                    <v-col cols="4" md="2" xs="4" v-for="(network,nk) in movieData.networks" :key="nk">
+                        <span class="text-caption">{{ network.name }}</span>
+                    </v-col>
+                </v-row>
+
+            </section>
+
             <section id="episodes" class="my-3 ">
                 <div class="py-2">
                     <h3 class="text-h4 font-weight-bold ">Episodes</h3>
                 </div>
-                
+
                 <v-row class="my-2">
                     <v-col cols="6" md="6" xs="6">
                         <v-select v-model="selectedSeason" label="Seasons" :items="seasonNumberArray" item-title="seasonNumber" item-value="1" return-object variant="outlined" @update:modelValue="handleSeasonChange"></v-select>
@@ -85,16 +84,17 @@
                 </div>
                 
                 <v-row v-if="popularShows.length">
-                    <v-col cols="4" md="3" xs="6" v-for="(popular,popKey) in popularShows" :key="popKey">
-                        <v-card class="rounded-lg">
-                            <nuxt-link :to="`/tv/${popular.id}/`">
-                                <v-img :src="`https://image.tmdb.org/t/p/w500/${popular.poster_path}`"></v-img>
-                            </nuxt-link>
-                        </v-card>
-                        
-                        <!-- :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" -->
-                         <!-- {{ popular.backdrop_path }} -->
-                    </v-col>
+                    <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+                            <v-slide-group-item v-for="(popular,popKey) in popularShows" :key="popKey" v-slot="{selectedClass }">
+                                <nuxt-link :to="`/tv/${popular.id}/`">
+                                    <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
+                                    <v-img :src="`https://image.tmdb.org/t/p/w300/${popular.poster_path}`" cover></v-img>
+                                </v-card>
+                                </nuxt-link>
+                                
+                            </v-slide-group-item>
+                        </v-slide-group>
+
                 </v-row>
                 <v-card flat>
 
@@ -149,45 +149,38 @@
                 <h4 class="text-h6 font-weight-bold text-red">Error Playing Episode</h4>
                 <p class="body-1">This episode hasn't aired yet. Please wait until the air date. If it's the release date please give it 12 to 24 hours to update.</p>
             </v-card-text>
-            
+
         </v-card>
     </v-bottom-sheet>
     <client-only>
-        <v-navigation-drawer
-        v-model="toggleEpisodeInfo"
-        temporary
-        color="grey-darken-4"
-        location="right"
-        width="350"
-        v-if="episodeDrawerInfo"
-      >
-      <v-card flat theme="dark">
-        <v-card-actions class="py-1">
-            <v-spacer></v-spacer>
-            <v-btn icon="mdi-close" @click="episodeDrawerInfo =false"></v-btn>
-        </v-card-actions>
-        <v-img :src="`https://image.tmdb.org/t/p/original/${episodeDrawerInfo.poster}`"></v-img>
-        <v-card-text >
-            <h3 class="text-subtitle-1 py-2 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeDrawerInfo.name }}</h3>
-            <div class="ml-2">
-                <p class="text-caption"><span class="font-weight-bold">Episode:</span> {{ episodeDrawerInfo.episodeNumber }}</p>
-                <p class="text-caption"><span class="font-weight-bold">Aired Date:</span> {{ episodeDrawerInfo.airDate }}</p>
-            </div>
-            
-            <div class="py-2 px-2 mt-3 bg-grey-darken-3 rounded-lg">
-                <p class="text-subtitle-2 font-weight-bold">Summary:</p>
-                <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
-            </div>
-            <div class="mt-3">
-                <v-btn block color="orange-darken-4">play Episode</v-btn>
-            </div>
-            
-        </v-card-text>
-        
-      </v-card>
-      </v-navigation-drawer>
+        <v-navigation-drawer v-model="toggleEpisodeInfo" temporary color="grey-darken-4" location="right" width="350" v-if="episodeDrawerInfo">
+            <v-card flat theme="dark">
+                <v-card-actions class="py-1">
+                    <v-spacer></v-spacer>
+                    <v-btn icon="mdi-close" @click="episodeDrawerInfo =false"></v-btn>
+                </v-card-actions>
+                <v-img :src="`https://image.tmdb.org/t/p/original/${episodeDrawerInfo.poster}`" height="300" color="black"></v-img>
+                <v-card-text>
+                    <h3 class="text-subtitle-1 py-2 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeDrawerInfo.name }}</h3>
+                    <div class="ml-2">
+                        <p class="text-caption"><span class="font-weight-bold">Episode:</span> {{ episodeDrawerInfo.episodeNumber }}</p>
+                        <p class="text-caption"><span class="font-weight-bold">Runtime:</span> {{ episodeDrawerInfo.runtime || "There's no runtime yet." }} <span v-if="episodeDrawerInfo.runtime">minutes</span></p>
+                        <p class="text-caption"><span class="font-weight-bold">Air Date:</span> {{ episodeDrawerInfo.airDate }}</p>
+                    </div>
+
+                    <div class="py-2 px-2 mt-3 bg-grey-darken-3 rounded-lg">
+                        <p class="text-subtitle-2 font-weight-bold">Summary:</p>
+                        <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
+                    </div>
+                    <div class="mt-3">
+                        <v-btn block color="orange-darken-4" :loading="loaodingMovie" :disabled="loaodingMovie || episodeDrawerInfo.crew.length === 0" @click="playEpisode(episodeDrawerInfo.id, episodeDrawerInfo.seasonNumber, episodeDrawerInfo.episodeNumber, episodeDrawerInfo.crew)">play Episode</v-btn>
+                    </div>
+
+                </v-card-text>
+
+            </v-card>
+        </v-navigation-drawer>
     </client-only>
-      
 
 </v-main>
 </template>
@@ -260,7 +253,7 @@ const handleSeasonChange = async (el) => {
     searchForEpisodes(el.seasonNumber)
 }
 const handleEpisodeChange = async (el) => {
-    // console.log(el)
+    //console.log(el)
     episodeDrawerInfo.value = el
     toggleEpisodeInfo.value = true
 }
@@ -269,25 +262,24 @@ const gettIMDBData = async () => {
         method: 'GET'
     })
     if (res) {
-        console.log(res)
+        //console.log(res)
         return imdbData.value = res
     }
 
 }
-const playEpisode = (id,season,episode,crew) => {
+const playEpisode = (id, season, episode, crew) => {
     loaodingMovie.value = true
     ///embed/tv/{tmdbId}/{season}/{episode}
-    if(crew.length){
+    if (crew.length) {
         iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
         setTimeout(() => {
             movieDialog.value = true
             loaodingMovie.value = false
         }, 1000)
-    }else{
+    } else {
         errorPlayingEpisode.value = true
         loaodingMovie.value = false
     }
-    
 
 }
 const searchForEpisodes = async (seasonNumber) => {
@@ -298,20 +290,23 @@ const searchForEpisodes = async (seasonNumber) => {
         })
 
         if (res) {
-            console.log(res)
+            //console.log(res)
             episodeNumberArray.value = []
             for (let e = 0; e < res.episodes.length; e++) {
                 const el = res.episodes[e];
-                // console.log(el)
+                //console.log(el)
                 episodeNumberArray.value.push({
                     episodeNumber: el.episode_number,
-                    id: el.episode_number,
+                    id: el.id,
                     episodeName: el.name,
+                    seasonNumber: el.season_number,
                     airDate: el.air_date,
                     name: el.name,
                     poster: el.still_path,
                     voteAverage: el.vote_average,
-                    overview: el.overview
+                    overview: el.overview,
+                    crew: el.crew,
+                    runtime: el.runtime
                 })
             }
             return episodeData.value = res
@@ -327,15 +322,15 @@ const getSeasons = async () => {
         })
         for (let s = 0; s < datad.seasons.length; s++) {
             const el = datad.seasons[s];
-            //console.log(el)
-                seasonNumberArray.value.push({
-                    seasonNumber: el.season_number,
-                    episodeCount: el.episode_count,
-                    id: el.id
-                })
+            console.log(el)
+            seasonNumberArray.value.push({
+                seasonNumber: el.season_number,
+                episodeCount: el.episode_count,
+                id: el.id
+            })
 
         }
-        
+
         searchForEpisodes('1')
         getTvSimilars()
         return getSeasonsData.value = datad
@@ -345,20 +340,19 @@ const getSeasons = async () => {
 const getTvSimilars = async () => {
     const datad = await moviedb.tvPopular()
 
-    if(datad){
+    if (datad) {
         let arr = []
-        for (let index = 0; index < 12; index++) {
+        for (let index = 0; index < datad.results.length; index++) {
             const pop = datad.results[index];
-            
-            if(pop.original_language === 'en' && pop.poster_path && pop.id != params.id){
+
+            if (pop.original_language === 'en' && pop.poster_path && pop.id != params.id) {
                 arr.push(pop)
             }
         }
-        if(arr.length){
+        if (arr.length) {
             arr.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));
             popularShows.value = arr
-        }   
-        
+        }
 
     }
     //console.log(datad)
@@ -377,10 +371,12 @@ const getTvSimilars = async () => {
 .movie-insert {
     width: 100%;
 }
-#epiCard{
+
+#epiCard {
     overflow-y: scroll;
 }
-#playButtonDrawer{
+
+#playButtonDrawer {
     position: absolute;
     bottom: 0;
     width: 100%;
