@@ -43,7 +43,7 @@
         <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
                 <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
                 <v-row>
-                        <v-col cols="12" md="2" xs="3" v-for="(network,nk) in movieData.networks" :key="nk">
+                        <v-col cols="4" md="2" xs="4" v-for="(network,nk) in movieData.networks" :key="nk">
                             <span class="text-caption">{{ network.name }}</span>
                         </v-col>
                     </v-row>

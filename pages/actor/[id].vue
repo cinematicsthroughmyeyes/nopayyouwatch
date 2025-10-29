@@ -13,74 +13,97 @@
             </div>
         </section>
 
-        <v-container v-if="personData" class="pt-0">
+        <v-container v-if="personData" class="pt-3 mt-5">
 
-            <section id="filmography" class="mt-4">
+            <section id="filmography" class="">
                 <v-row>
-                    <v-col cols="12" md="6" xs="12">
+                    <v-col cols="12" md="6" xs="12" class="py-1">
                         <div class="border-md pa-3 rounded-lg bg-black">
-                            <div class="py-2">
-                                <h3 class="text-subtitle-1 text-right font-weight-bold" v-if="personData.gender === 1">Actoress <span class="font-italic">({{ actorCreditsNumber }})</span></h3>
-                                <h3 class="text-subtitle-1 text-right font-weight-bold" v-else>Actor <span class="font-italic">({{ actorCreditsNumber }})</span></h3>
+                            <div class="py-2" @click="showMoreInfo = !showMoreInfo">
+                                <v-row>
+                                    <v-col cols="6" md="10" xs="10">
+                                        <h3 class="text-subtitle-1 font-weight-bold" v-if="personData.gender === 1">Actoress <span class="font-italic">({{ actorCreditsNumber }})</span></h3>
+                                        <h3 class="text-subtitle-1 font-weight-bold" v-else>Actor <span class="font-italic">({{ actorCreditsNumber }})</span></h3>
+                                    </v-col>
+                                    <v-col cols="6" md="2" xs="2" class="text-right">
+                                        <v-btn :icon="showMoreInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="md" class="text-right" flat variant="text"></v-btn>
+                                    </v-col>
+                                </v-row>
                             </div>
+                            <v-expand-transition>
+                                <div v-show="showMoreInfo">
+                                    <v-list lines="two" theme="dark" height="400" v-if="actorCredits.length">
+                                        <v-list-item v-for="folder in actorCredits" :key="folder.title" :to="`/movie/${folder.id}/`">
+                                            <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
+                                            <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.character || 'Not specified' }}</v-list-item-subtitle>
+                                            <v-list-item-subtitle class="text-high-emphasis">{{ folder.release_date }}</v-list-item-subtitle>
+                                            <template v-slot:prepend>
+                                                <v-avatar :image="`https://image.tmdb.org/t/p/w200/${folder.poster_path}`" v-if="folder.poster_path"></v-avatar>
+                                                <v-avatar v-else>
+                                                    <v-icon icon="mdi-skull" size="large"></v-icon>
+                                                </v-avatar>
 
-                            <v-list lines="two" theme="dark" height="400" v-if="actorCredits.length">
-                                <v-list-item v-for="folder in actorCredits" :key="folder.title">
-                                    <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
-                                    <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.character || 'Not specified' }}</v-list-item-subtitle>
-                                    <v-list-item-subtitle class="text-high-emphasis">{{ folder.release_date }}</v-list-item-subtitle>
-                                    <template v-slot:prepend>
-                                        <v-avatar :image="`https://image.tmdb.org/t/p/w200/${folder.poster_path}`" v-if="folder.poster_path"></v-avatar>
-                                        <v-avatar v-else>
-                                            <v-icon icon="mdi-skull" size="large"></v-icon>
-                                        </v-avatar>
+                                            </template>
 
-                                    </template>
+                                            <template v-slot:append>
+                                                <v-btn color="grey-lighten-1" icon="mdi-information" variant="text" @click="openNaviDrawer(folder)"></v-btn>
+                                            </template>
+                                        </v-list-item>
 
-                                    <template v-slot:append>
-                                        <v-btn color="grey-lighten-1" icon="mdi-information" variant="text" @click="openNaviDrawer(folder)"></v-btn>
-                                    </template>
-                                </v-list-item>
+                                    </v-list>
+                                    <div v-else>
+                                        <v-card height="400" theme="dark">
+                                            <p class="text-center pa-3">No Data</p>
+                                        </v-card>
 
-                            </v-list>
-                            <div v-else>
-                                <v-card height="400" theme="dark">
-                                    <p class="text-center pa-3">No Data</p>
-                                </v-card>
+                                    </div>
+                                </div>
+                            </v-expand-transition>
 
-                            </div>
                         </div>
                     </v-col>
-                    <v-col cols="12" md="6" xs="12">
+                    <v-col cols="12" md="6" xs="12" class="py-2">
                         <div class="border-md pa-3 rounded-lg bg-black">
-                            <div class="py-2">
-                                <h3 class="text-subtitle-1 text-right font-weight-bold">Other <span class="font-italic">({{ actorCastsNumber }})</span></h3>
+                            <div class="py-2" @click="showMoreInfoOther = !showMoreInfoOther">
+                                <v-row>
+                                    <v-col cols="6" md="10" xs="10">
+                                        <h3 class="text-subtitle-1 font-weight-bold">Other <span class="font-italic">({{ actorCastsNumber }})</span></h3>
+                                    </v-col>
+                                    <v-col cols="6" md="2" xs="2" class="text-right">
+                                        <v-btn :icon="showMoreInfoOther ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="md" class="text-right" flat variant="text" v-if="actorCastsNumber !== 0"></v-btn>
+                                    </v-col>
+                                </v-row>
                             </div>
-                            <v-list lines="two" theme="dark" height="400" class="rounded-lg " v-if="actorCastCredits.length">
-                                <v-list-item v-for="folder in actorCastCredits" :key="folder.title">
-                                    <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
-                                    <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.job || 'Not specified' }}</v-list-item-subtitle>
-                                    <v-list-item-subtitle class="text-high-emphasis">{{ folder.release_date }}</v-list-item-subtitle>
-                                    <template v-slot:prepend>
-                                        <v-avatar :image="`https://image.tmdb.org/t/p/w200/${folder.poster_path}`" v-if="folder.poster_path"></v-avatar>
-                                        <v-avatar v-else>
-                                            <v-icon icon="mdi-skull" size="large"></v-icon>
-                                        </v-avatar>
+                            <v-expand-transition>
+                                <div v-show="showMoreInfoOther">
+                                    <v-list lines="two" theme="dark" height="400" class="rounded-lg " v-if="actorCastCredits.length">
+                                        <v-list-item v-for="folder in actorCastCredits" :key="folder.title">
+                                            <v-list-item-title>{{ folder.original_title || 'Not specified' }}</v-list-item-title>
+                                            <v-list-item-subtitle class="mb-1 text-high-emphasis">{{ folder.job || 'Not specified' }}</v-list-item-subtitle>
+                                            <v-list-item-subtitle class="text-high-emphasis">{{ folder.release_date }}</v-list-item-subtitle>
+                                            <template v-slot:prepend>
+                                                <v-avatar :image="`https://image.tmdb.org/t/p/w200/${folder.poster_path}`" v-if="folder.poster_path"></v-avatar>
+                                                <v-avatar v-else>
+                                                    <v-icon icon="mdi-skull" size="large"></v-icon>
+                                                </v-avatar>
 
-                                    </template>
+                                            </template>
 
-                                    <template v-slot:append>
-                                        <v-btn color="grey-lighten-1" icon="mdi-information" variant="text"></v-btn>
-                                    </template>
-                                </v-list-item>
+                                            <template v-slot:append>
+                                                <v-btn color="grey-lighten-1" icon="mdi-information" variant="text"></v-btn>
+                                            </template>
+                                        </v-list-item>
 
-                            </v-list>
-                            <div v-else>
-                                <v-card height="400" theme="dark">
-                                    <p class="text-center pa-3">No Data</p>
-                                </v-card>
+                                    </v-list>
+                                    <div v-else>
+                                        <v-card height="400" theme="dark">
+                                            <p class="text-center pa-3">No Data</p>
+                                        </v-card>
 
-                            </div>
+                                    </div>
+                                </div>
+                            </v-expand-transition>
+
                         </div>
 
                     </v-col>
@@ -137,6 +160,9 @@ const actorCreditsNumber = ref(0)
 const actorCastsNumber = ref(0)
 const actorDrawer = ref(false)
 const naviDrawerData = ref()
+const showMoreInfo = ref(false)
+const showMoreInfoOther = ref(false)
+
 onMounted(() => {
     gettMovieVideos()
 })
@@ -145,6 +171,13 @@ const gettMovieVideos = async () => {
         const movieVideos = await moviedb.personInfo(`${params.id}`)
         //console.log(movieVideos)
         if (movieVideos) {
+            useHead({
+                title: `${movieVideos.name} | No Pay. You Watch.`,
+                meta: [{
+                    name: 'description',
+                    content: `Everything about ${movieVideos.name}`
+                }, ],
+            })
             personData.value = movieVideos
             getPersonMovieCredits()
         }

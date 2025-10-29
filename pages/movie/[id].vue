@@ -5,7 +5,12 @@
             <v-card class="movie-header pa-3" :elevation="8">
                 <div class="movie-insert pa-3">
                     <!-- <v-avatar :image="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-avatar> -->
-                    <h1 class="text-h4 text-orange-darken-4 font-weight-bold text-truncate mb-2">{{ movieData.title }}</h1>
+                    <h1 class="text-h4 text-orange-darken-4 font-weight-bold text-truncate mb-2"> {{ movieData.title }}</h1>
+                    <section class="mb-3">
+                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="outlined" color="orange-darken-4" class="mr-1">
+                            {{ mChip.name }}
+                        </v-chip>
+                    </section>
                     <p class="text-body-2 text-white">{{ movieData.tagline }}</p>
 
                     <v-row class="py-4">
@@ -25,11 +30,7 @@
                             </p>
                         </v-col>
                     </v-row>
-                    <section class="mb-3">
-                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="outlined" color="orange-darken-4" class="mr-1">
-                            {{ mChip.name }}
-                        </v-chip>
-                    </section>
+                    
                     <section id="play-button" class="my-2">
 
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" v-if="movieData.runtime !== 0" :disabled="loaodingMovie" @click="playMovie(movieData.id, movieData)">
@@ -72,15 +73,14 @@
         </v-container>
         <v-container>
             <h3 class="text-h5 my-3">Cast</h3>
-
             <section id="cast" v-if="imdbData">
-                <v-row>
+                <v-row v-if="imdbData.stars.length > 0">
                     <v-col cols="6" md="3" xs="6" v-for="(i, ik) in imdbData.stars" :key="ik">
-                        <!-- {{ i}} -->
                         <v-card flat class="rounded-lg bg-orange-darken-4" @click="searchPerson(i.displayName)">
-                            <v-img :src="i.primaryImage.url" height="200" cover position="top"></v-img>
+                            <div v-if="i.primaryImage">
+                                <v-img :src="i.primaryImage.url" height="200" cover position="top" v-if="i.primaryImage.url"></v-img>
+                            </div>
                             <v-card-text>
-                                <!-- {{ i }} -->
                                 <p class="text-body-2 text-truncate">{{ i.displayName }}</p>
                                 <!-- <v-chip v-for=" (chip,ck) in i.primaryProfessions" :key="ck" size="x-small">
                                 {{ chip }}
@@ -96,10 +96,8 @@
                 <section id="cast" v-if="imdbData" class="my-2">
                     <v-row>
                         <v-col cols="6" md="3" xs="6" v-for="(di, idk) in imdbData.directors" :key="idk">
-                            <!-- {{ i}} -->
                             <v-card flat class="rounded-lg bg-orange-darken-4">
                                 <v-card-text>
-                                    <!-- {{ i }} -->
                                     <p class="text-body-2 text-truncate">{{ di.displayName }}</p>
                                     <!-- <v-chip v-for=" (chip,ck) in i.primaryProfessions" :key="ck" size="x-small">
                                 {{ chip }}
@@ -129,7 +127,6 @@
                     </v-row>
                 </section>
             </div>
-            <!-- {{ movieData }} -->
         </v-container>
     </div>
     <div v-else>
@@ -156,11 +153,11 @@
                 <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
             </v-card-actions> -->
             <v-expand-transition>
-                <div v-show="show" class="bg-orange-darken-1">
+                <div v-show="show" class="bg-grey-darken-4">
                     <v-divider></v-divider>
 
                     <v-card-text>
-                         <p class="body-1 pa-3 bg-orange-darken-1 rounded-lg">{{ movieDialogData.overview }}</p>
+                         <p class="body-1 pa-3 grey-darken-2 rounded-lg">{{ movieDialogData.overview }}</p>
                     </v-card-text>
                 </div>
             </v-expand-transition>
@@ -252,7 +249,7 @@ const testcall = async (id) => {
                 title: `${movie.title} | No Pay. You Watch.`,
                 meta: [{
                     name: 'description',
-                    content: `EVerything about kanoee`
+                    content: `Everything about ${movie.title}`
                 }, ],
             })
             imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
@@ -272,7 +269,6 @@ const gettIMDBData = async () => {
         method: 'GET'
     })
     if (res) {
-        console.log(res)
         return imdbData.value = res
     }
 
@@ -284,7 +280,6 @@ const gettMovieVideos = async () => {
     //console.log(movieVideos)
     for (let index = 0; index < moreVideos.results.length; index++) {
         const r = moreVideos.results[index];
-        console.log(r)
         if (r.official && r.type === 'Trailer') {
             trailerVideos.value.push(r)
         }
