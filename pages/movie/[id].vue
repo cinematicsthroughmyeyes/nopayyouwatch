@@ -119,6 +119,7 @@
                     </v-row>
                 </section>
             </div>
+            <SlidersPopularMovies/>
         </v-container>
     </div>
     <div v-else>

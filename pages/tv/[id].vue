@@ -88,30 +88,26 @@
                     </v-card>
                 </div>
             </section>
+            <v-container class="mt-3 px-5" v-if="movieData.created_by.length > 0">
+                    <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
+                    <v-row class="text-center">
+                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(tvhome,cbh) in movieData.created_by" :key="cbh">
+                            <v-card flat class="bg-grey-darken-4" v-if="tvhome.profile_path">
+                                <v-avatar :image="`https://image.tmdb.org/t/p/w200/${tvhome.profile_path}`" size="80"></v-avatar>
+                                <p class="text-caption py-2">{{ tvhome.name }}</p>
+                            </v-card>
+                            <v-card v-else>
+                                <p class="text-caption py-2">{{ tvhome.name }}</p>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
             <section id="youMayLike" class="py-3">
-                <div class="my-5">
-                    <h4 class="text-h4 font-weight-bold">Popular Shows</h4>
-                </div>
-                
-                <v-row v-if="popularShows.length">
-                    <v-slide-group class="pa-1" selected-class="bg-success" show-arrows>
-                            <v-slide-group-item v-for="(popular,popKey) in popularShows" :key="popKey" v-slot="{selectedClass }">
-                                <nuxt-link :to="`/tv/${popular.id}/`">
-                                    <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
-                                    <v-img :src="`https://image.tmdb.org/t/p/w300/${popular.poster_path}`" cover></v-img>
-                                </v-card>
-                                </nuxt-link>
-                                
-                            </v-slide-group-item>
-                        </v-slide-group>
-
-                </v-row>
-                <v-card flat>
-
-                </v-card>
+                <!-- <SlidersPopularMovies/> -->
+                <SlidersTvSimilar :tvID="movieData.id"/>
             </section>
         </v-container>
-
+        
     </div>
     <div v-else>
         <h1>loading...</h1>
@@ -183,6 +179,8 @@
                         </v-col>
                     </v-row>
                 </v-container>
+                <SlidersTvSimilar :tvID="movieData.id"/>
+                
             </div>
         </v-card>
     </v-dialog>
