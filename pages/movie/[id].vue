@@ -5,32 +5,24 @@
             <v-card class="movie-header pa-3" :elevation="8">
                 <div class="movie-insert pa-3">
                     <!-- <v-avatar :image="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-avatar> -->
-                    <h1 class="text-h4 text-orange-darken-4 font-weight-bold text-truncate mb-2"> {{ movieData.title }}</h1>
+                    <h1 class="text-h3 text-orange-darken-4 font-weight-bold text-truncate mb-2"> {{ movieData.title }}</h1>
+                    <v-row class="py-4">
+                        <div class="py-3 px-3">
+                            <p class="text-body-2 text-white mx-0">
+                                <v-icon icon="mdi-calendar-range" size="large" color="white" class="mr-1"></v-icon> <span class="mr-2">{{ movieData.release_date.substring(0,4) }}</span>
+                                <v-icon icon="mdi-clock-outline" color="white" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.runtime }} minutes</span>
+                                <v-icon icon="mdi-star" color="yellow" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.vote_average.toFixed(1) }}</span>
+                            </p>
+                        </div>
+                    </v-row>
                     <section class="mb-3">
-                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="outlined" color="orange-darken-4" class="mr-1">
+                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1">
                             {{ mChip.name }}
                         </v-chip>
                     </section>
-                    <p class="text-body-2 text-white">{{ movieData.tagline }}</p>
-
-                    <v-row class="py-4">
-                        <v-col cols='4' md="1" sm="12">
-                            <p class="text-caption text-white mx-0">
-                                <v-icon icon="mdi-calendar-range" color="orange" class="mr-2"></v-icon> {{ movieData.release_date }}
-                            </p>
-                        </v-col>
-                        <v-col cols='4' md="1" sm="12">
-                            <p class="text-caption text-white mx-0">
-                                <v-icon icon="mdi-clock-outline" color="orange" class="mr-2"></v-icon>{{ movieData.runtime }} minutes
-                            </p>
-                        </v-col>
-                        <v-col cols='3' md="1" sm="12">
-                            <p class="text-caption text-white mx-0">
-                                <v-icon icon="mdi-star" color="yellow" class="mr-2"></v-icon>{{ movieData.vote_average.toFixed(1) }}
-                            </p>
-                        </v-col>
-                    </v-row>
-                    
+                    <div class="py-3">
+                        <p class="text-body-2 text-white">{{ movieData.overview.substring(0,200) }}</p>
+                    </div>
                     <section id="play-button" class="my-2">
 
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" v-if="movieData.runtime !== 0" :disabled="loaodingMovie" @click="playMovie(movieData.id, movieData)">
@@ -39,9 +31,9 @@
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" v-else :disabled="true">
                             Movie Not Available
                         </v-btn>
-                        <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
-                            <v-icon icon="mdi-group" class="text-white" color="black"></v-icon>
-                        </v-btn>
+                        <ActionsWatchlist :data="movieData"/>
+                        <!-- <v-fab color="grey-lighten-1" icon="mdi-plus" size="small" ></v-fab> -->
+                        <v-fab color="grey-lighten-1" icon="mdi-group" mr-2 size="small" class="mr-2" @click="collectionSheet = true" v-if="collectionData"></v-fab>
                     </section>
                 </div>
 
@@ -138,30 +130,59 @@
             <v-card-actions class="bg-black">
                 <v-spacer></v-spacer>
 
-                <v-btn icon="mdi-close" @click="movieDialog = false"></v-btn>
+                <v-btn icon="mdi-close" @click="closeMovieDialog"></v-btn>
             </v-card-actions>
             <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen> </iframe>
-            <v-toolbar :title="movieDialogData.original_title" density="compact" color="orange-darken-4" :elevation="0" class="border-b-md">
+            <v-toolbar :title="movieDialogData.original_title" density="compact" color="grey-darken-4" :elevation="4" class="border-b-md" @click="show = !show">
                 <template v-slot:append>
-        <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
+        <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" ></v-btn>
       </template>
             </v-toolbar>
-            <!-- <v-card-actions>
-
-                <v-spacer></v-spacer>
-
-                <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
-            </v-card-actions> -->
             <v-expand-transition>
-                <div v-show="show" class="bg-grey-darken-4">
-                    <v-divider></v-divider>
-
-                    <v-card-text>
-                         <p class="body-1 pa-3 grey-darken-2 rounded-lg">{{ movieDialogData.overview }}</p>
-                    </v-card-text>
+                <div v-show="show" class="pa-2 ">
+                    <v-row class="bg-grey-darken-4 ">
+                        <v-col cols="6" md="2" xs="2" class="pt-4 pb-2">
+                            <v-img :src="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`" min-height="150" class="bg-black"></v-img>
+                        </v-col>
+                        <v-col cols="6" md="9" sm="9" class="pl-0">
+                            <div class="">
+                         <p class="text-body-2 py-3 rounded-lg">{{ movieDialogData.overview.substring(0, 200) }}</p>
+                          <v-chip v-for="(cm,cmk) in movieDialogData.genres" :key="cmk" density="compact" variant="flat" color="orange-darken-4" class="mr-1 mb-2">{{ cm.name }}</v-chip>
+                    </div>
+                        </v-col>
+                    </v-row>
                 </div>
             </v-expand-transition>
-            <v-card-actions>
+            
+            <v-container class="mt-3">
+                <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
+                <v-row class="text-center">
+                <v-col cols="3" md="1" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
+                    <!-- {{ castDia }} -->
+                      <v-card v-if="castDia.primaryImage" flat>
+                            <v-avatar :image="castDia.primaryImage.url" size="80" ></v-avatar>
+                            <p class="text-caption py-2">{{ castDia.displayName }}</p>
+                      </v-card>
+                    
+                </v-col>
+            </v-row>
+            </v-container>
+            <v-divider class="mt-2"></v-divider>
+            <v-container class="mt-3">
+                <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
+                <v-row class="text-center">
+                <v-col cols="3" md="1" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
+                    <!-- {{ castDia }} -->
+                      <v-card v-if="castDir.primaryImage" flat>
+                            <v-avatar :image="castDir.primaryImage.url" size="80" ></v-avatar>
+                            <p class="text-caption py-2">{{ castDir.displayName }}</p>
+                      </v-card>
+                    
+                </v-col>
+            </v-row>
+            </v-container>
+            <v-divider class="mt-2"></v-divider>
+            <!-- <v-card-actions>
                 <v-row>
                     <v-col cols="4" md="4" xs="4">
                         <v-btn  block size="x-large">
@@ -180,7 +201,7 @@
                     </v-col>
                 </v-row>
                 
-            </v-card-actions>
+            </v-card-actions> -->
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -291,7 +312,7 @@ const playMovie = (id, data) => {
     loaodingMovie.value = true
     iframsrc.value = ``
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
-    // console.log(data)
+    console.log(data)
     movieDialogData.value = data
     setTimeout(() => {
         movieDialog.value = true
@@ -307,6 +328,10 @@ const searchPerson = async (person) => {
         })
     }
 
+}
+const closeMovieDialog = () =>{
+    iframsrc.value = ''
+    movieDialog.value = false
 }
 </script>
 

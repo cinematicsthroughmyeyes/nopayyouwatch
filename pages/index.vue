@@ -27,7 +27,7 @@
                 <v-row>
                     <v-col cols="12" md="12" xs="12">
                         <h3 class="text-h5 font-weight-bold text-orange-darken-4">Trending</h3>
-                        <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+                        <v-slide-group class="pa-1" selected-class="bg-success" show-arrows>
                             <v-slide-group-item v-for="(w,wk) in weeklyTrendingArr" :key="wk" v-slot="{selectedClass }">
                                 <nuxt-link :to="w.media_type === 'movie' ? `/movie/${w.id}/` : `/tv/${w.id}/`">
                                     <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
@@ -44,7 +44,7 @@
                 <v-row>
                     <v-col cols="12" md="12" xs="12">
                         <h3 class="text-h5 font-weight-bold text-orange-darken-4">Popular Movies</h3>
-                        <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+                        <v-slide-group class="pa-1" selected-class="bg-success" show-arrows>
                             <v-slide-group-item v-for="(pn,pk) in popularMoviesArr" :key="pk" v-slot="{selectedClass }">
                                 <nuxt-link :to="`/movie/${pn.id}`">
                                     <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
@@ -61,7 +61,7 @@
                 <v-row>
                     <v-col cols="12" md="12" xs="12">
                         <h3 class="text-h5 font-weight-bold text-orange-darken-4">Top Rated Movies</h3>
-                        <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+                        <v-slide-group class="pa-1" selected-class="bg-success" show-arrows>
                             <v-slide-group-item v-for="(n,k) in topRatedMoviesArr" :key="k" v-slot="{selectedClass }">
                                 <nuxt-link :to="`/movie/${n.id}`">
                                     <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
@@ -143,7 +143,7 @@ const popularMovies = async () => {
     })
     for (let index = 0; index < 20; index++) {
         const element = popular.results[index];
-        if (element.poster_path != '') {
+        if (element.poster_path) {
             popularMoviesArr.value.push(element)
         }
 

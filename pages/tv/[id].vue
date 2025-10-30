@@ -3,29 +3,38 @@
     <div v-if="movieData">
         <v-img :src="`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`" aspect-ratio="16/9" min-height="550" max-height="550" cover>
             <v-card class="movie-header pa-3" :elevation="8">
-                <div class="movie-insert pa-3">
-                    <!-- <v-avatar :image="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-avatar> -->
-                    <h1 class="text-h4 text-orange-darken-4 font-weight-bold text-truncate mb-2">{{ movieData.name }}</h1>
-                    <p class="text-body-2 text-white">{{ movieData.overview }}</p>
+                <div class="movie-insert pa-3" style="max-width: 1000px;">
+                    <!-- <v-img :src="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-img> -->
+                    <h1 class="text-h3 text-orange-darken-4 font-weight-bold text-truncate mb-2">{{ movieData.name }}</h1>
+                    
 
                     <v-row class="py-4">
-                        <v-col cols='5' md="1" sm="12">
+                        <div class="py-3 px-3">
                             <p class="text-body-2 text-white mx-0">
-                                <v-icon icon="mdi-calendar-range" color="orange" class="mr-2"></v-icon> {{ movieData.first_air_date }}
+                                <v-icon icon="mdi-calendar-range" size="large" color="white" class="mr-1"></v-icon> <span class="mr-2">{{ movieData.first_air_date.substring(0,4) }}</span>
+                                <v-icon icon="mdi-star" color="yellow" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.vote_average.toFixed(1) }}</span>
+                            </p>
+                        </div>
+                        <!-- <v-col cols='4' md="2" sm="12">
+                            <p class="text-body-2 text-white mx-0">
+                                <v-icon icon="mdi-calendar-range" color="white" class="mr-2"></v-icon> {{ movieData.first_air_date.substring(0,4) }}
                             </p>
                         </v-col>
-                        <v-col cols='4' md="1" sm="12">
+                        <v-col cols='4' md="2" sm="12">
                             <p class="text-body-2 text-white mx-0">
                                 <v-icon icon="mdi-star" color="yellow" class="mr-2"></v-icon>{{ movieData.vote_average.toFixed(1) }}
                             </p>
-                        </v-col>
+                        </v-col> -->
                     </v-row>
-                    <section class="mb-3">
-                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="outlined" color="orange-darken-4" class="mr-1">
+                    <section class="mb-2">
+                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1">
                             {{ mChip.name }}
                         </v-chip>
                     </section>
-
+                    <div class="py-3">
+                        <p class="text-body-2 text-white">{{ movieData.overview.substring(0, 200) }}</p>
+                    </div>
+                    
                     <section id="play-button" class="my-2">
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
@@ -78,13 +87,13 @@
                     </v-card>
                 </div>
             </section>
-            <section id="youMayLike" class="py-5">
+            <section id="youMayLike" class="py-3">
                 <div class="my-5">
                     <h4 class="text-h4 font-weight-bold">Popular Shows</h4>
                 </div>
                 
                 <v-row v-if="popularShows.length">
-                    <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
+                    <v-slide-group class="pa-1" selected-class="bg-success" show-arrows>
                             <v-slide-group-item v-for="(popular,popKey) in popularShows" :key="popKey" v-slot="{selectedClass }">
                                 <nuxt-link :to="`/tv/${popular.id}/`">
                                     <v-card :class="['ma-4', selectedClass]" color="grey-lighten-1" height="270" width="210">
