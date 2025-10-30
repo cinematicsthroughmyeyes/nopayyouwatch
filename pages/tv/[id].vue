@@ -39,6 +39,7 @@
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
                         </v-btn>
+                        <ActionsWatchlist :data="movieData"/>
                         <v-btn class="text-white  mr-2" color="grey-darken-2" variant="outlined" @click="collectionSheet = true" v-if="collectionData">
                             <v-icon icon="mdi-group" class="text-white" color="black"></v-icon>
                         </v-btn>

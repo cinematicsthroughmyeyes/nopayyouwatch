@@ -126,18 +126,22 @@
     </div>
     <v-dialog v-model="movieDialog" transition="dialog-bottom-transition" fullscreen theme="dark">
 
-        <v-card flat>
-            <v-card-actions class="bg-black">
+        <v-card flat max-height="400" style="overflow-y: scroll; position: relative;">
+            
+            <div class="bg-black" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 100;">
+                <v-card-actions class="bg-black">
                 <v-spacer></v-spacer>
 
                 <v-btn icon="mdi-close" @click="closeMovieDialog"></v-btn>
             </v-card-actions>
-            <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen> </iframe>
-            <v-toolbar :title="movieDialogData.original_title" density="compact" color="grey-darken-4" :elevation="4" class="border-b-md" @click="show = !show">
+                    <iframe :src="iframsrc" width="100%" height="300" frameborder="0" allowfullscreen> </iframe>
+                    <v-toolbar :title="movieDialogData.original_title" density="compact" color="grey-darken-4" :elevation="4" class="border-b-md" @click="show = !show">
                 <template v-slot:append>
         <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" ></v-btn>
       </template>
             </v-toolbar>
+            </div>
+            
             <v-expand-transition>
                 <div v-show="show" class="pa-2 ">
                     <v-row class="bg-grey-darken-4 ">
@@ -153,13 +157,13 @@
                     </v-row>
                 </div>
             </v-expand-transition>
-            
-            <v-container class="mt-3">
+            <div class="bg-black">
+                <v-container class="mt-3 px-5 ">
                 <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
                 <v-row class="text-center">
                 <v-col cols="3" md="1" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
                     <!-- {{ castDia }} -->
-                      <v-card v-if="castDia.primaryImage" flat>
+                      <v-card v-if="castDia.primaryImage" flat class="bg-black">
                             <v-avatar :image="castDia.primaryImage.url" size="80" ></v-avatar>
                             <p class="text-caption py-2">{{ castDia.displayName }}</p>
                       </v-card>
@@ -173,7 +177,7 @@
                 <v-row class="text-center">
                 <v-col cols="3" md="1" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
                     <!-- {{ castDia }} -->
-                      <v-card v-if="castDir.primaryImage" flat>
+                      <v-card v-if="castDir.primaryImage" flat class="bg-black">
                             <v-avatar :image="castDir.primaryImage.url" size="80" ></v-avatar>
                             <p class="text-caption py-2">{{ castDir.displayName }}</p>
                       </v-card>
@@ -182,6 +186,8 @@
             </v-row>
             </v-container>
             <v-divider class="mt-2"></v-divider>
+            </div>
+            
             <!-- <v-card-actions>
                 <v-row>
                     <v-col cols="4" md="4" xs="4">
