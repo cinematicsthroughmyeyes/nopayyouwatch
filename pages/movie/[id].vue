@@ -133,11 +133,11 @@
                 <v-card-actions class="bg-black py-1">
                     <v-spacer></v-spacer>
 
-                    <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog"></v-btn>
+                    <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog = false"></v-btn>
                 </v-card-actions>
                 <div id="videoPlayer">
-                        <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
-                    </div>
+                    <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
+                </div>
             </div>
 
             <div class="bg-black">

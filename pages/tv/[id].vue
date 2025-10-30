@@ -36,7 +36,7 @@
                     </div>
                     
                     <section id="play-button" class="my-2">
-                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'])">
+                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'], movieData)">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
                         </v-btn>
                         <ActionsWatchlist :data="movieData"/>
@@ -77,7 +77,7 @@
                 <div id="episodeGroup" v-if="episodeData">
                     <v-card theme="dark" flat height="400" id="epiCard">
                         <v-list lines="two">
-                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew)">
+                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew,episodes)">
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" v-if="episodes.still_path"></v-avatar>
                                     <v-avatar icon="mdi-skull" v-else></v-avatar>
@@ -118,13 +118,70 @@
     </div>
     <v-dialog v-model="movieDialog" transition="dialog-bottom-transition" fullscreen theme="dark">
 
-        <v-card flat>
-            <v-card-actions class="bg-black">
-                <v-spacer></v-spacer>
+        <v-card flat max-height="400" style="overflow-y: scroll; position: relative;">
+            <div class="bg-black" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 100;">
+                <v-card-actions class="bg-black py-1">
+                    <v-spacer></v-spacer>
 
-                <v-btn icon="mdi-close" @click="movieDialog = false"></v-btn>
-            </v-card-actions>
-            <iframe :src="iframsrc" width="100%" height="600" frameborder="0" allowfullscreen> </iframe>
+                    <v-btn icon="mdi-close" size="sm" @click="movieDialog = false"></v-btn>
+                </v-card-actions>
+                <div id="videoPlayer">
+                    <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
+                </div>
+            </div>
+            <div class="bg-black">
+                <v-container>
+                    <div class="py-3" @click="showTV = !showTV">
+                        <v-row>
+                            <v-col cols="10" md="10" sm="10">
+                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ tvDialogData.name }}</h2>
+                                <p class="text-body-2 py-1 text-truncate">{{ tvDialogData.tagline }}</p>
+                            </v-col>
+                            <v-col cols="2" md="2" class="text-right" sm="2">
+                                <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <v-btn-toggle rounded="lg" border divided class="mb-3 bg-black" color="black">
+                        <v-btn value="right" color="black">
+                            <!-- <span class="hidden-sm-and-down">Left</span> -->
+                            <span>0</span>
+                            <v-icon end>
+                                mdi-thumb-up-outline
+                            </v-icon>
+                        </v-btn>
+                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
+                        <v-btn icon="mdi-information-outline" size="small"></v-btn>
+                    </v-btn-toggle>
+                    <v-expand-transition>
+                        <div v-show="showTV" class="pa-2 ">
+                            <v-row class="bg-grey-darken-4 ">
+                                <v-col cols="6" md="2" xs="2" class="py-4">
+                                    <v-img :src="`https://image.tmdb.org/t/p/w200/${tvDialogData.poster_path}`" min-height="150" class="bg-black rounded-lg"></v-img>
+                                </v-col>
+                                <v-col cols="6" md="9" sm="9" class="pl-0">
+                                    <div class="">
+                                        <p class="text-caption py-3 rounded-lg">{{ tvDialogData.overview.substring(0, 200) }}</p>
+                                        <v-chip v-for="(cm,cmk) in tvDialogData.genres" :key="cmk" density="compact" variant="flat" color="orange-darken-4" class="mr-1 mb-2">{{ cm.name }}</v-chip>
+                                    </div>
+                                </v-col>
+                            </v-row>
+                        </div>
+                    </v-expand-transition>
+                </v-container>
+                <v-container class="mt-3 px-5 ">
+                    <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
+                    <v-row class="text-center">
+                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(tvcreateby,cb) in tvDialogData.created_by" :key="cb">
+                            <v-card flat class="bg-black">
+                                <v-avatar :image="`https://image.tmdb.org/t/p/w200/${tvcreateby.profile_path}`" size="80"></v-avatar>
+                                <p class="text-caption py-2">{{ tvcreateby.name }}</p>
+                            </v-card>
+
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </div>
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -214,6 +271,8 @@ const episodeData = ref()
 const getSeasonsData = ref()
 const seasonNumberArray = ref([])
 const episodeNumberArray = ref([])
+const showTV = ref(false)
+const tvDialogData = ref()
 const selectedSeason = ref({
     seasonNumber: 1
 })
@@ -277,9 +336,11 @@ const gettIMDBData = async () => {
     }
 
 }
-const playEpisode = (id, season, episode, crew) => {
+const playEpisode = (id, season, episode, crew,data) => {
     loaodingMovie.value = true
     ///embed/tv/{tmdbId}/{season}/{episode}
+    console.log(data)
+    tvDialogData.value = data
     if (crew.length) {
         iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
         setTimeout(() => {
