@@ -185,6 +185,7 @@
                             </v-row>
                         </div>
                     </v-expand-transition>
+                    <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <v-container class="mt-3 px-5 " v-if="imdbData.stars.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
@@ -198,8 +199,8 @@
 
                         </v-col>
                     </v-row>
+                    <v-divider class="mt-2"></v-divider>
                 </v-container>
-                <v-divider class="mt-2"></v-divider>
                 <v-container class="mt-3" v-if="imdbData.directors.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
                     <v-row class="text-center">
@@ -215,8 +216,10 @@
 
                         </v-col>
                     </v-row>
+                    <v-divider class="mt-2"></v-divider>
                 </v-container>
-                <v-divider class="mt-2"></v-divider>
+                
+                <SlidersPopularMovies/>
             </div>
         </v-card>
     </v-dialog>

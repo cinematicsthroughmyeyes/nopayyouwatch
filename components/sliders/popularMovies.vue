@@ -23,19 +23,28 @@
     } from 'moviedb-promise'
     const moviedb = new MovieDb('73ae87f4ead565385079a234d8d1e7a6')
     const popularMoviesArr = ref([])
+    const loadedpopmovies = ref(false)
     onMounted(() => {
         popularMovies()
+
     })
     const popularMovies = async () => {
     const popular = await moviedb.moviePopular({
         language: 'en-US'
     })
-    for (let index = 0; index < 20; index++) {
-        const element = popular.results[index];
-        if (element.poster_path) {
-            popularMoviesArr.value.push(element)
-        }
+    console.log(loadedpopmovies.value)
+    if(!loadedpopmovies.value){
+        if(popular.results.length > 0){
+            for (let index = 0; index < 20; index++) {
+                const element = popular.results[index];
+                if (element.poster_path) {
+                    popularMoviesArr.value.push(element)
+                }
+            }
+            loadedpopmovies.value = true
 
+        }
     }
+    
 }
 </script>

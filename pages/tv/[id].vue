@@ -164,6 +164,7 @@
                             </v-row>
                         </div>
                     </v-expand-transition>
+                    <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <v-container class="mt-3 px-5 " v-if="tvDialogData.created_by.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
@@ -178,6 +179,7 @@
                             </v-card>
                         </v-col>
                     </v-row>
+                    <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <SlidersTvSimilar :tvID="movieData.id"/>
                 
