@@ -1,7 +1,7 @@
 <template>
 <v-main class="bg-grey-darken-4">
     <div v-if="movieData">
-        <v-img :src="`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`" aspect-ratio="16/9" min-height="550" max-height="550" cover>
+        <v-parallax :src="`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`" aspect-ratio="16/9" min-height="550" max-height="550" cover>
             <v-card class="movie-header pa-3" :elevation="8">
                 <div class="movie-insert pa-3">
                     <!-- <v-avatar :image="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-avatar> -->
@@ -31,14 +31,14 @@
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" v-else :disabled="true">
                             Movie Not Available
                         </v-btn>
-                        <ActionsWatchlist :data="movieData"/>
+                        <ActionsWatchlist :data="movieData" />
                         <!-- <v-fab color="grey-lighten-1" icon="mdi-plus" size="small" ></v-fab> -->
                         <v-fab color="grey-lighten-1" icon="mdi-group" mr-2 size="small" class="mr-2" @click="collectionSheet = true" v-if="collectionData"></v-fab>
                     </section>
                 </div>
 
             </v-card>
-        </v-img>
+        </v-parallax>
         <v-container class="mt-5">
             <v-row>
                 <v-col cols="6" md="10" xs="6" class="py-0">
@@ -124,92 +124,117 @@
     <div v-else>
         <h1>loading...</h1>
     </div>
+    <!-- <PlayerDialogPlayer :movieDialogData="movieDialogData" :imdbData="imdbData"/> -->
     <v-dialog v-model="movieDialog" transition="dialog-bottom-transition" fullscreen theme="dark">
 
         <v-card flat max-height="400" style="overflow-y: scroll; position: relative;">
-            
+
             <div class="bg-black" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 100;">
                 <v-card-actions class="bg-black py-1">
-                <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
 
-                <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog"></v-btn>
-            </v-card-actions>
-                    <div id="videoPlayer">
+                    <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog"></v-btn>
+                </v-card-actions>
+                <div id="videoPlayer">
                         <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
                     </div>
-                    <v-toolbar :title="movieDialogData.original_title" density="compact" color="grey-darken-4" :elevation="4" class="border-b-md" @click="show = !show">
-                <template v-slot:append>
-        <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" ></v-btn>
-      </template>
-            </v-toolbar>
             </div>
-            
-            <v-expand-transition>
-                <div v-show="show" class="pa-2 ">
-                    <v-row class="bg-grey-darken-4 ">
-                        <v-col cols="6" md="2" xs="2" class="py-4">
-                            <v-img :src="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`" min-height="150" class="bg-black rounded-lg"></v-img>
-                        </v-col>
-                        <v-col cols="6" md="9" sm="9" class="pl-0">
-                            <div class="">
-                         <p class="text-body-2 py-3 rounded-lg">{{ movieDialogData.overview.substring(0, 200) }}</p>
-                          <v-chip v-for="(cm,cmk) in movieDialogData.genres" :key="cmk" density="compact" variant="flat" color="orange-darken-4" class="mr-1 mb-2">{{ cm.name }}</v-chip>
+
+            <div class="bg-black">
+                <v-container>
+                    <div class="py-3" @click="show = !show">
+                        <v-row>
+                            <v-col cols="10" md="10" sm="10">
+                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ movieDialogData.title }}</h2>
+                                <p class="text-body-2 py-1 text-truncate">{{ movieDialogData.tagline }}</p>
+                            </v-col>
+                            <v-col cols="2" md="2" class="text-right" sm="2">
+                                <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
+                            </v-col>
+                        </v-row>
+
                     </div>
+                    
+                    <v-btn-toggle rounded="lg" border divided class="mb-3 bg-black" color="black">
+                        <v-btn value="right" color="black">
+                            <!-- <span class="hidden-sm-and-down">Left</span> -->
+                            <span>0</span>
+                            <v-icon end>
+                                mdi-thumb-up-outline
+                            </v-icon>
+                        </v-btn>
+                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
+                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialog = !infoDialog"></v-btn>
+                    </v-btn-toggle>
+                    <!-- <div class="">
+                        <v-avatar :image="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`"></v-avatar> {{ movieDialogData.runtime }} minutes
+                    </div> -->
+                    <v-expand-transition>
+                        <div v-show="show" class="pa-2 ">
+                            <v-row class="bg-grey-darken-4 ">
+                                <v-col cols="6" md="2" xs="2" class="py-4">
+                                    <v-img :src="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`" min-height="150" class="bg-black rounded-lg"></v-img>
+                                </v-col>
+                                <v-col cols="6" md="9" sm="9" class="pl-0">
+                                    <div class="">
+                                        <p class="text-caption py-3 rounded-lg">{{ movieDialogData.overview.substring(0, 200) }}</p>
+                                        <v-chip v-for="(cm,cmk) in movieDialogData.genres" :key="cmk" density="compact" variant="flat" color="orange-darken-4" class="mr-1 mb-2">{{ cm.name }}</v-chip>
+                                    </div>
+                                </v-col>
+                            </v-row>
+                        </div>
+                    </v-expand-transition>
+                </v-container>
+                <v-container class="mt-3 px-5 ">
+                    <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
+                    <v-row class="text-center">
+                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
+                            <!-- {{ castDia }} -->
+                            <v-card v-if="castDia.primaryImage" flat class="bg-black">
+                                <v-avatar :image="castDia.primaryImage.url" size="80"></v-avatar>
+                                <p class="text-caption py-2">{{ castDia.displayName }}</p>
+                            </v-card>
+
                         </v-col>
                     </v-row>
-                </div>
-            </v-expand-transition>
-            <div class="bg-black">
-                <v-container class="mt-3 px-5 ">
-                <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
-                <v-row class="text-center">
-                <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
-                    <!-- {{ castDia }} -->
-                      <v-card v-if="castDia.primaryImage" flat class="bg-black">
-                            <v-avatar :image="castDia.primaryImage.url" size="80" ></v-avatar>
-                            <p class="text-caption py-2">{{ castDia.displayName }}</p>
-                      </v-card>
-                    
-                </v-col>
-            </v-row>
-            </v-container>
-            <v-divider class="mt-2"></v-divider>
-            <v-container class="mt-3">
-                <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
-                <v-row class="text-center">
-                <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
-                    <!-- {{ castDia }} -->
-                      <v-card v-if="castDir.primaryImage" flat class="bg-black">
-                            <v-avatar :image="castDir.primaryImage.url" size="80" ></v-avatar>
-                            <p class="text-caption py-2">{{ castDir.displayName }}</p>
-                      </v-card>
-                    
-                </v-col>
-            </v-row>
-            </v-container>
-            <v-divider class="mt-2"></v-divider>
+                </v-container>
+                <v-divider class="mt-2"></v-divider>
+                <v-container class="mt-3">
+                    <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
+                    <v-row class="text-center">
+                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
+                            <!-- {{ castDia }} -->
+                            <v-card v-if="castDir.primaryImage" flat class="bg-black">
+                                <v-avatar :image="castDir.primaryImage.url" size="80"></v-avatar>
+                                <p class="text-caption py-2">{{ castDir.displayName }}</p>
+                            </v-card>
+
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <v-divider class="mt-2"></v-divider>
             </div>
+        </v-card>
+    </v-dialog>
+    <v-dialog width="400" v-model="infoDialog">
+        <v-card theme="dark" class="rounded-lg">
+            <v-card-actions class="py-1">
+                <v-spacer></v-spacer>
+                <v-btn icon="mdi-close" @click="infoDialog = !infoDialog" variant="text"></v-btn>
+            </v-card-actions>
+            <v-container class="pt-0">
+                <h4 class="text-h5 py-3 text-orange-darken-4 font-weight-bold">Information</h4>
+                <div class="px-2">
+                    <p class="text-body-2 py-1"><span class="font-weight-bold">Runtime :</span> {{ movieDialogData.runtime }} minutes</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Budget:</span> ${{ movieDialogData.budget.toLocaleString() }}</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Revenue:</span> ${{ movieDialogData.revenue.toLocaleString() }}</p>
+                </div>
+                <div class="pa-2 mt-2 rounded-lg" :class="movieDialogData.budget *2 <= movieDialogData.revenue ? 'bg-green' : 'bg-red'">
+                    <p class="text-caption" v-if="movieDialogData.budget * 2 <= movieDialogData.revenue">Revenue beat the budget! Hooray!</p>
+                    <p class="text-caption" v-else>Revenue did not beat the budget! That sucks!</p>
+                </div>
+            </v-container>
             
-            <!-- <v-card-actions>
-                <v-row>
-                    <v-col cols="4" md="4" xs="4">
-                        <v-btn  block size="x-large">
-                            <v-icon icon="mdi-bookmark"></v-icon>
-                        </v-btn>
-                    </v-col>
-                    <v-col cols="4" md="4" xs="4">
-                        <v-btn  block size="x-large">
-                            <v-icon icon="mdi-plus"></v-icon>
-                        </v-btn>
-                    </v-col>
-                    <v-col cols="4" md="4" xs="4">
-                        <v-btn  block size="x-large">
-                            <v-icon icon="mdi-account"></v-icon>
-                        </v-btn>
-                    </v-col>
-                </v-row>
-                
-            </v-card-actions> -->
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -254,6 +279,7 @@ const collectionSheet = ref(false)
 const collectionData = ref()
 const trailerVideos = ref([])
 const router = useRouter()
+const infoDialog = ref(false)
 const movieDialogData = ref()
 const show = ref(false)
 onMounted(() => {
@@ -337,7 +363,7 @@ const searchPerson = async (person) => {
     }
 
 }
-const closeMovieDialog = () =>{
+const closeMovieDialog = () => {
     iframsrc.value = ''
     movieDialog.value = false
 }
@@ -355,7 +381,8 @@ const closeMovieDialog = () =>{
 .movie-insert {
     width: 100%;
 }
-#videoPlayer{
+
+#videoPlayer {
     min-height: 240px;
     max-height: 450px;
 }

@@ -1,7 +1,7 @@
 <template>
 <v-main class="bg-grey-darken-4">
     <div v-if="movieData">
-        <v-img :src="`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`" aspect-ratio="16/9" min-height="550" max-height="550" cover>
+        <v-parallax :src="`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`" aspect-ratio="16/9" min-height="550" max-height="550" cover>
             <v-card class="movie-header pa-3" :elevation="8">
                 <div class="movie-insert pa-3" style="max-width: 1000px;">
                     <!-- <v-img :src="`https://image.tmdb.org/t/p/original/${movieData.poster_path}`" height="200"></v-img> -->
@@ -47,7 +47,7 @@
                 </div>
 
             </v-card>
-        </v-img>
+        </v-parallax>
         <v-container>
 
             <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
