@@ -135,7 +135,7 @@
                 <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog"></v-btn>
             </v-card-actions>
                     <div id="videoPlayer">
-                        <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '280': '440'" frameborder="0" allowfullscreen> </iframe>
+                        <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
                     </div>
                     <v-toolbar :title="movieDialogData.original_title" density="compact" color="grey-darken-4" :elevation="4" class="border-b-md" @click="show = !show">
                 <template v-slot:append>
@@ -356,7 +356,7 @@ const closeMovieDialog = () =>{
     width: 100%;
 }
 #videoPlayer{
-    min-height: 250px;
+    min-height: 240px;
     max-height: 450px;
 }
 </style>
