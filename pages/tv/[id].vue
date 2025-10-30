@@ -169,15 +169,17 @@
                         </div>
                     </v-expand-transition>
                 </v-container>
-                <v-container class="mt-3 px-5 ">
+                <v-container class="mt-3 px-5 " v-if="tvDialogData.created_by.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
                     <v-row class="text-center">
                         <v-col cols="3" md="2" sm="2" xs="2" v-for="(tvcreateby,cb) in tvDialogData.created_by" :key="cb">
-                            <v-card flat class="bg-black">
+                            <v-card flat class="bg-black" v-if="tvcreateby.profile_path">
                                 <v-avatar :image="`https://image.tmdb.org/t/p/w200/${tvcreateby.profile_path}`" size="80"></v-avatar>
                                 <p class="text-caption py-2">{{ tvcreateby.name }}</p>
                             </v-card>
-
+                            <v-card v-else>
+                                <p class="text-caption py-2">{{ tvcreateby.name }}</p>
+                            </v-card>
                         </v-col>
                     </v-row>
                 </v-container>

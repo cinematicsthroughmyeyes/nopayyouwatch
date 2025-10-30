@@ -133,7 +133,7 @@
                 <v-card-actions class="bg-black py-1">
                     <v-spacer></v-spacer>
 
-                    <v-btn icon="mdi-close" size="sm" @click="closeMovieDialog = false"></v-btn>
+                    <v-btn icon="mdi-close" size="sm" @click="movieDialog = false"></v-btn>
                 </v-card-actions>
                 <div id="videoPlayer">
                     <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
@@ -146,7 +146,7 @@
                         <v-row>
                             <v-col cols="10" md="10" sm="10">
                                 <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ movieDialogData.title }}</h2>
-                                <p class="text-body-2 py-1 text-truncate">{{ movieDialogData.tagline }}</p>
+                                <p class="text-body-2 py-1 text-truncate">{{ movieDialogData.tagline || movieDialogData.overview.substring(0,100) }}</p>
                             </v-col>
                             <v-col cols="2" md="2" class="text-right" sm="2">
                                 <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
@@ -185,7 +185,7 @@
                         </div>
                     </v-expand-transition>
                 </v-container>
-                <v-container class="mt-3 px-5 ">
+                <v-container class="mt-3 px-5 " v-if="imdbData.stars.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
                     <v-row class="text-center">
                         <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
@@ -199,13 +199,16 @@
                     </v-row>
                 </v-container>
                 <v-divider class="mt-2"></v-divider>
-                <v-container class="mt-3">
+                <v-container class="mt-3" v-if="imdbData.directors.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
                     <v-row class="text-center">
                         <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
                             <!-- {{ castDia }} -->
                             <v-card v-if="castDir.primaryImage" flat class="bg-black">
                                 <v-avatar :image="castDir.primaryImage.url" size="80"></v-avatar>
+                                <p class="text-caption py-2">{{ castDir.displayName }}</p>
+                            </v-card>
+                            <v-card v-else flat class="bg-black">
                                 <p class="text-caption py-2">{{ castDir.displayName }}</p>
                             </v-card>
 
@@ -229,9 +232,13 @@
                 <p class="text-body-2 py-1"><span class="font-weight-bold">Budget:</span> ${{ movieDialogData.budget.toLocaleString() }}</p>
                 <p class="text-body-2 py-1"><span class="font-weight-bold">Revenue:</span> ${{ movieDialogData.revenue.toLocaleString() }}</p>
                 </div>
-                <div class="pa-2 mt-2 rounded-lg" :class="movieDialogData.budget *2 <= movieDialogData.revenue ? 'bg-green' : 'bg-red'">
+                <div class="pa-2 mt-2 rounded-lg" :class="movieDialogData.budget *2 <= movieDialogData.revenue ? 'bg-green' : 'bg-red'" v-if="movieDialogData.budget > 0">
                     <p class="text-caption" v-if="movieDialogData.budget * 2 <= movieDialogData.revenue">Revenue beat the budget! Hooray!</p>
                     <p class="text-caption" v-else>Revenue did not beat the budget! That sucks!</p>
+                </div>
+                <div id="productionCompanies" v-if="movieDialogData.production_companies" class="ml-2">
+                    <h5 class="text-subtitle-1 text-orange-darken-4 font-weight-bold">Production Companies</h5>
+                    <p class="text-caption ml-2" v-for=" (pc,pk) in movieDialogData.production_companies" :key="pk">{{ pc.name }}</p>
                 </div>
             </v-container>
             
@@ -344,6 +351,7 @@ const gettMovieVideos = async () => {
 //personMovieCredits
 const playMovie = (id, data) => {
     loaodingMovie.value = true
+    //https://player.videasy.net/
     iframsrc.value = ``
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
     console.log(data)
