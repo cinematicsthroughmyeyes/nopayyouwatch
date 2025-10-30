@@ -190,7 +190,7 @@
                 <v-container class="mt-3 px-5 " v-if="imdbData.stars.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Cast</h4>
                     <v-row class="text-center">
-                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
+                        <v-col cols="4" md="2" sm="3" xs="3" v-for="(castDia,cadk) in imdbData.stars" :key="cadk">
                             <!-- {{ castDia }} -->
                             <v-card v-if="castDia.primaryImage" flat class="bg-black">
                                 <v-avatar :image="castDia.primaryImage.url" size="80"></v-avatar>
@@ -204,7 +204,7 @@
                 <v-container class="mt-3" v-if="imdbData.directors.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4 font-weight-bold">Director(s)</h4>
                     <v-row class="text-center">
-                        <v-col cols="3" md="2" sm="2" xs="2" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
+                        <v-col cols="4" md="2" sm="3" xs="3" v-for="(castDir,cadr) in imdbData.directors" :key="cadr">
                             <!-- {{ castDia }} -->
                             <v-card v-if="castDir.primaryImage" flat class="bg-black">
                                 <v-avatar :image="castDir.primaryImage.url" size="80"></v-avatar>

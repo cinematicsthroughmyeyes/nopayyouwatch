@@ -91,7 +91,7 @@
             <v-container class="mt-3 px-5" v-if="movieData.created_by.length > 0">
                     <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
                     <v-row class="text-center">
-                        <v-col cols="3" md="2" sm="3" xs="3" v-for="(tvhome,cbh) in movieData.created_by" :key="cbh">
+                        <v-col cols="4" md="2" sm="3" xs="3" v-for="(tvhome,cbh) in movieData.created_by" :key="cbh">
                             <v-card flat class="bg-grey-darken-4" v-if="tvhome.profile_path">
                                 <v-avatar :image="`https://image.tmdb.org/t/p/w200/${tvhome.profile_path}`" size="80"></v-avatar>
                                 <p class="text-caption py-2">{{ tvhome.name }}</p>
@@ -147,7 +147,7 @@
                             </v-icon>
                         </v-btn>
                         <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
-                        <v-btn icon="mdi-information-outline" size="small"></v-btn>
+                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialogTV = true"></v-btn>
                     </v-btn-toggle>
                     <v-expand-transition>
                         <div v-show="showTV" class="pa-2 ">
@@ -184,6 +184,28 @@
                 <SlidersTvSimilar :tvID="movieData.id"/>
                 
             </div>
+        </v-card>
+    </v-dialog>
+    <v-dialog width="400" v-model="infoDialogTV">
+        <v-card theme="dark" class="rounded-lg">
+            <v-card-actions class="py-1">
+                <v-spacer></v-spacer>
+                <v-btn icon="mdi-close" @click="infoDialogTV = !infoDialogTV" variant="text"></v-btn>
+            </v-card-actions>
+            <v-container class="pt-0">
+                <h4 class="text-h5 py-3 text-orange-darken-4 font-weight-bold">Information</h4>
+                <div class="px-2">
+                    <p class="text-body-2 py-1"><span class="font-weight-bold">Number of Season(s) :</span> {{ tvDialogData.number_of_seasons }}</p>
+                    <p class="text-body-2 py-1"><span class="font-weight-bold">Season 1 aired:</span> {{ tvDialogData.first_air_date }}</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Status:</span> {{ tvDialogData.status }}</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Type:</span> {{ tvDialogData.type }}</p>
+                </div>
+                <div id="productionCompanies" v-if="tvDialogData.production_companies" class="ml-2">
+                    <h5 class="text-subtitle-1 text-orange-darken-4 font-weight-bold">Production Companies</h5>
+                    <p class="text-caption ml-2" v-for=" (pct,pkt) in tvDialogData.production_companies" :key="pkt">{{ pct.name }}</p>
+                </div>
+            </v-container>
+            
         </v-card>
     </v-dialog>
     <v-bottom-sheet v-model="collectionSheet" v-if="collectionData">
@@ -275,6 +297,7 @@ const seasonNumberArray = ref([])
 const episodeNumberArray = ref([])
 const showTV = ref(false)
 const tvDialogData = ref()
+const infoDialogTV = ref(false)
 const selectedSeason = ref({
     seasonNumber: 1
 })
