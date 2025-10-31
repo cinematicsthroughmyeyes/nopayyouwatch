@@ -121,7 +121,8 @@
                     <v-btn icon="mdi-close" size="sm" @click="movieDialog = false"></v-btn>
                 </v-card-actions>
                 <div id="videoPlayer">
-                    <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
+                    <iframe :src="iframsrc" width="100%"  frameborder="0" allowfullscreen> </iframe>
+                    <!-- :height="$vuetify.display.mobile ? '340': ''" -->
                 </div>
             </div>
             <div class="bg-black">
@@ -502,5 +503,10 @@ const getTvSimilars = async () => {
     position: absolute;
     bottom: 0;
     width: 100%;
+}
+#videoPlayer iframe{
+    max-height: calc(100vh - 169px);
+    height: 56.25vw;
+    min-height: 480px;
 }
 </style>
