@@ -7,9 +7,9 @@
 
         <v-card class="pa-8 d-flex justify-center bg-orange-darken-2 flex-wrap" min-height="400">
             <v-container class="text-center">
-                <h1 class="text-h2 text-xs-h6 text-md-h2 text-white font-weight-black my-4">No Pay. You Watch.</h1>
+                <h1 class="text-h2 text-xs-h6 text-md-h2 text-white font-weight-black mt-4 mb-5">No Pay. You Watch.</h1>
                 <v-row justify="center" dense>
-                    <v-col cols="12">
+                    <v-col cols="12" style="max-width: 700px;">
                         <v-autocomplete label="Type in movie or TV show name..." auto-select-first rounded :items="searchedMovies" return-object item-title="original_title" theme="dark" variant="solo" v-model:search-input="searchMovies" :key="searchedMovies.id" @update:search="onInput" v-model="selectedMovie" prepend-inner-icon="mdi-magnify" menu-icon="" :hide-no-data="true" :loading="loadingMovie">
 
                             <template v-slot:item="{ props, item }">
