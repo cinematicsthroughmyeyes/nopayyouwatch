@@ -138,9 +138,11 @@
                             </v-col>
                         </v-row>
                         <v-row v-else>
+                            <!-- {{ episodeData }} -->
                             <v-col cols="10" md="10" sm="10">
-                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ tvDialogData.name }}</h2>
-                                <p class="text-body-2 py-1 text-truncate">Season: 1 - Episode: 1</p>
+                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeData.episodes[0].name }}</h2>
+                                <p class="text-body-2 py-1 text-truncate" v-if="tvDialogData.episodeNumber">Season: {{tvDialogData.seasonNumber}} - Episode: {{tvDialogData.episodeNumber }}</p>
+                                <p class="text-body-2 py-1 text-truncate" v-else>Season: 1 - Episode: 1</p>
                             </v-col>
                             <v-col cols="2" md="2" class="text-right" sm="2">
                                 <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
@@ -292,7 +294,7 @@
                         <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
                     </div>
                     <div class="mt-3">
-                        <v-btn block color="orange-darken-4" :loading="loaodingMovie" :disabled="loaodingMovie || episodeDrawerInfo.crew.length === 0" @click="playEpisode(episodeDrawerInfo.id, episodeDrawerInfo.seasonNumber, episodeDrawerInfo.episodeNumber, episodeDrawerInfo.crew,movieData)">play Episode</v-btn>
+                        <v-btn block color="orange-darken-4" :loading="loaodingMovie" :disabled="loaodingMovie || episodeDrawerInfo.crew.length === 0" @click="playEpisode(episodeDrawerInfo.id, episodeDrawerInfo.seasonNumber, episodeDrawerInfo.episodeNumber, episodeDrawerInfo.crew,movieData, episodeDrawerInfo)">play Episode</v-btn>
                     </div>
 
                 </v-card-text>
