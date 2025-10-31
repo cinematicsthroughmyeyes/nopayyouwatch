@@ -113,8 +113,8 @@
     </div>
     <v-dialog v-model="movieDialog" transition="dialog-bottom-transition" fullscreen theme="dark">
 
-        <v-card flat max-height="400" style="overflow-y: scroll; position: relative;">
-            <div class="bg-black" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 100;">
+        <v-card flat>
+            <div class="bg-black">
                 <v-card-actions class="bg-black py-1">
                     <v-spacer></v-spacer>
 
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <div class="bg-black">
-                <v-container>
+                <v-container class="pt-0">
                     <div class="py-3" @click="showTV = !showTV">
                         <v-row v-if="tvDialogData.season_number">
                             <v-col cols="10" md="10" sm="10">
@@ -147,17 +147,6 @@
                             </v-col>
                         </v-row>
                     </div>
-                    <v-btn-toggle rounded="lg" border divided class="mb-3 bg-black" color="black">
-                        <v-btn value="right" color="black">
-                            <!-- <span class="hidden-sm-and-down">Left</span> -->
-                            <span>0</span>
-                            <v-icon end>
-                                mdi-thumb-up-outline
-                            </v-icon>
-                        </v-btn>
-                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
-                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialogTV = true"></v-btn>
-                    </v-btn-toggle>
                     <v-expand-transition>
                         <div v-show="showTV" class="pa-2 ">
                             <v-row class="bg-grey-darken-4 ">
@@ -176,6 +165,18 @@
                             </v-row>
                         </div>
                     </v-expand-transition>
+                    <v-btn-toggle rounded="lg" border divided class="mt-3 mb-4 bg-black" color="black">
+                        <v-btn value="right" color="black">
+                            <!-- <span class="hidden-sm-and-down">Left</span> -->
+                            <span>0</span>
+                            <v-icon end>
+                                mdi-thumb-up-outline
+                            </v-icon>
+                        </v-btn>
+                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
+                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialogTV = true"></v-btn>
+                    </v-btn-toggle>
+                    
                     <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <v-container class="mt-3 px-5" v-if="tvDialogData.crew">
@@ -394,7 +395,7 @@ const playEpisode = (id, season, episode, crew,data) => {
     console.log(data)
     tvDialogData.value = data
     if (crew.length) {
-        iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&episodeSelector=true&nextEpisode=true`
+        iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&nextEpisode=true`
         setTimeout(() => {
             movieDialog.value = true
             loaodingMovie.value = false

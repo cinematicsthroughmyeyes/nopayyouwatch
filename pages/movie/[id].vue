@@ -128,16 +128,16 @@
     <!-- <PlayerDialogPlayer :movieDialogData="movieDialogData" :imdbData="imdbData"/> -->
     <v-dialog v-model="movieDialog" transition="dialog-bottom-transition" fullscreen theme="dark">
 
-        <v-card flat max-height="400" style="overflow-y: scroll; position: relative;">
+        <v-card flat>
 
-            <div class="bg-black" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 100;">
+            <div class="bg-black">
                 <v-card-actions class="bg-black py-1">
                     <v-spacer></v-spacer>
 
                     <v-btn icon="mdi-close" size="sm" @click="movieDialog = false"></v-btn>
                 </v-card-actions>
                 <div id="videoPlayer">
-                    <iframe :src="iframsrc" width="100%" :height="$vuetify.display.mobile ? '240': '440'" frameborder="0" allowfullscreen> </iframe>
+                    <iframe :src="iframsrc" width="100%" frameborder="0" allowfullscreen> </iframe>
                 </div>
             </div>
 
@@ -155,21 +155,6 @@
                         </v-row>
 
                     </div>
-                    
-                    <v-btn-toggle rounded="lg" border divided class="mb-3 bg-black" color="black">
-                        <v-btn value="right" color="black">
-                            <!-- <span class="hidden-sm-and-down">Left</span> -->
-                            <span>0</span>
-                            <v-icon end>
-                                mdi-thumb-up-outline
-                            </v-icon>
-                        </v-btn>
-                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
-                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialog = !infoDialog"></v-btn>
-                    </v-btn-toggle>
-                    <!-- <div class="">
-                        <v-avatar :image="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`"></v-avatar> {{ movieDialogData.runtime }} minutes
-                    </div> -->
                     <v-expand-transition>
                         <div v-show="show" class="pa-2 ">
                             <v-row class="bg-grey-darken-4 ">
@@ -185,6 +170,21 @@
                             </v-row>
                         </div>
                     </v-expand-transition>
+                    <v-btn-toggle rounded="lg" border divided class="mt-3 mb-4 bg-black" color="black">
+                        <v-btn value="right" color="black">
+                            <!-- <span class="hidden-sm-and-down">Left</span> -->
+                            <span>0</span>
+                            <v-icon end>
+                                mdi-thumb-up-outline
+                            </v-icon>
+                        </v-btn>
+                        <v-btn icon="mdi-thumb-down-outline" size="small"></v-btn>
+                        <v-btn icon="mdi-information-outline" size="small" @click="infoDialog = !infoDialog"></v-btn>
+                    </v-btn-toggle>
+                    <!-- <div class="">
+                        <v-avatar :image="`https://image.tmdb.org/t/p/w200/${movieDialogData.poster_path}`"></v-avatar> {{ movieDialogData.runtime }} minutes
+                    </div> -->
+                    
                     <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <v-container class="mt-3 px-5 " v-if="imdbData.stars.length > 0">
@@ -393,9 +393,9 @@ const closeMovieDialog = () => {
 .movie-insert {
     width: 100%;
 }
-
-#videoPlayer {
-    min-height: 240px;
-    max-height: 450px;
+#videoPlayer iframe{
+    max-height: calc(100vh - 169px);
+    height: 56.25vw;
+    min-height: 480px;
 }
 </style>
