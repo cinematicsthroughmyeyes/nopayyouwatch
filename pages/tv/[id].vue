@@ -36,7 +36,7 @@
                     </div>
                     
                     <section id="play-button" class="my-2">
-                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, ['1'], movieData)">
+                        <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" :loading="loaodingMovie" :disabled="loaodingMovie" @click="playEpisode( 1,1, 1, movieData.created_by, movieData)">
                             <v-icon icon="mdi-play" class="text-white" color="black"></v-icon> Play S1 Epi: 1
                         </v-btn>
                         <ActionsWatchlist :data="movieData"/>
@@ -49,7 +49,6 @@
             </v-card>
         </v-parallax>
         <v-container>
-
             <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
                 <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
                 <v-row>
@@ -182,7 +181,7 @@
                     <v-divider class="mt-2"></v-divider>
                 </v-container>
                 <v-container class="mt-3 px-5" v-else>
-                    <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Crew</h4>
+                    <h4 class="text-body-1 pb-4 text-orange-darken-4  font-weight-bold">Created By</h4>
                     <v-row class="text-center">
                         <v-col cols="3" md="2" sm="3" xs="3" v-for="(tvcreateby,cb) in tvDialogData.created_by" :key="cb">
                             <v-card flat class="bg-black" v-if="tvcreateby.profile_path">
@@ -210,14 +209,14 @@
             <v-container class="pt-0">
                 <h4 class="text-h5 py-3 text-orange-darken-4 font-weight-bold">Information</h4>
                 <div class="px-2">
-                    <p class="text-body-2 py-1"><span class="font-weight-bold">Number of Season(s) :</span> {{ tvDialogData.number_of_seasons }}</p>
-                    <p class="text-body-2 py-1"><span class="font-weight-bold">Season 1 aired:</span> {{ tvDialogData.first_air_date }}</p>
-                <p class="text-body-2 py-1"><span class="font-weight-bold">Status:</span> {{ tvDialogData.status }}</p>
-                <p class="text-body-2 py-1"><span class="font-weight-bold">Type:</span> {{ tvDialogData.type }}</p>
+                    <p class="text-body-2 py-1"><span class="font-weight-bold">Number of Season(s) :</span> {{ movieData.number_of_seasons }}</p>
+                    <p class="text-body-2 py-1"><span class="font-weight-bold">Season 1 aired:</span> {{ movieData.first_air_date }}</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Status:</span> {{ movieData.status }}</p>
+                <p class="text-body-2 py-1"><span class="font-weight-bold">Type:</span> {{ movieData.type }}</p>
                 </div>
-                <div id="productionCompanies" v-if="tvDialogData.production_companies" class="ml-2">
+                <div id="productionCompanies" v-if="movieData.production_companies" class="ml-2">
                     <h5 class="text-subtitle-1 text-orange-darken-4 font-weight-bold">Production Companies</h5>
-                    <p class="text-caption ml-2" v-for=" (pct,pkt) in tvDialogData.production_companies" :key="pkt">{{ pct.name }}</p>
+                    <p class="text-caption ml-2" v-for=" (pct,pkt) in movieData.production_companies" :key="pkt">{{ pct.name }}</p>
                 </div>
             </v-container>
             
