@@ -127,10 +127,19 @@
             <div class="bg-black">
                 <v-container>
                     <div class="py-3" @click="showTV = !showTV">
-                        <v-row>
+                        <v-row v-if="tvDialogData.season_number">
                             <v-col cols="10" md="10" sm="10">
                                 <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ tvDialogData.name }}</h2>
-                                <p class="text-body-2 py-1 text-truncate">{{ tvDialogData.tagline }}</p>
+                                <p class="text-body-2 py-1 text-truncate">Season: {{tvDialogData.season_number}} - Episode:{{ tvDialogData.episode_number }}</p>
+                            </v-col>
+                            <v-col cols="2" md="2" class="text-right" sm="2">
+                                <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-row v-else>
+                            <v-col cols="10" md="10" sm="10">
+                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeData.episodes[0].name }}</h2>
+                                <p class="text-body-2 py-1 text-truncate">Season: {{episodeData.episodes[0].season_number}} - Episode:{{ episodeData.episodes[0].episode_number }}</p>
                             </v-col>
                             <v-col cols="2" md="2" class="text-right" sm="2">
                                 <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
@@ -152,7 +161,10 @@
                         <div v-show="showTV" class="pa-2 ">
                             <v-row class="bg-grey-darken-4 ">
                                 <v-col cols="6" md="2" xs="2" class="py-4">
-                                    <v-img :src="`https://image.tmdb.org/t/p/w200/${tvDialogData.poster_path}`" min-height="150" class="bg-black rounded-lg"></v-img>
+                                    <!-- {{ tvDialogData }} -->
+                                    <v-img :src="`https://image.tmdb.org/t/p/w200/${tvDialogData.poster_path}`" min-height="150" class="bg-black rounded-lg" v-if="tvDialogData.poster_path"></v-img>
+                                    <v-img :src="`https://image.tmdb.org/t/p/w200/${tvDialogData.still_path}`" min-height="150" class="bg-black rounded-lg" v-else></v-img>
+
                                 </v-col>
                                 <v-col cols="6" md="9" sm="9" class="pl-0">
                                     <div class="">
