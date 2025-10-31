@@ -76,7 +76,7 @@
                 <div id="episodeGroup" v-if="episodeData">
                     <v-card theme="dark" flat height="400" id="epiCard">
                         <v-list lines="two">
-                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew,episodes)">
+                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew,movieData)">
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" v-if="episodes.still_path"></v-avatar>
                                     <v-avatar icon="mdi-skull" v-else></v-avatar>
@@ -290,7 +290,7 @@
                         <p class="text-caption">{{ episodeDrawerInfo.overview.substring(0, 300) }}</p>
                     </div>
                     <div class="mt-3">
-                        <v-btn block color="orange-darken-4" :loading="loaodingMovie" :disabled="loaodingMovie || episodeDrawerInfo.crew.length === 0" @click="playEpisode(episodeDrawerInfo.id, episodeDrawerInfo.seasonNumber, episodeDrawerInfo.episodeNumber, episodeDrawerInfo.crew)">play Episode</v-btn>
+                        <v-btn block color="orange-darken-4" :loading="loaodingMovie" :disabled="loaodingMovie || episodeDrawerInfo.crew.length === 0" @click="playEpisode(episodeDrawerInfo.id, episodeDrawerInfo.seasonNumber, episodeDrawerInfo.episodeNumber, episodeDrawerInfo.crew,movieData)">play Episode</v-btn>
                     </div>
 
                 </v-card-text>
