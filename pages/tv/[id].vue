@@ -50,13 +50,32 @@
         </v-parallax>
         <v-container>
             <section class="bg-grey-darken-3 pa-3 rounded-lg mb-4 border-lg" v-if="movieData.networks">
-                <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
+                
                 <v-row>
-                    <v-col cols="4" md="2" xs="4" v-for="(network,nk) in movieData.networks" :key="nk">
+                    <v-col cols="10" md="11" xs="10" v-for="(network,nk) in movieData.networks" :key="nk">
+                        <p class="text-subtitle-1 font-weight-bold">Airs on:</p>
                         <span class="text-caption">{{ network.name }}</span>
                     </v-col>
-                </v-row>
+                    <v-col cols="2" md="1" sm="2" class="text-right">
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                            <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+                            </template>
 
+                            <v-list>
+                            <v-list-item
+                                v-for="(item, i) in items"
+                                :key="i"
+                                :value="i"
+                                @click="item.action(movieData.homepage)"
+                            >
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </v-col>
+                </v-row>
+                
             </section>
 
             <section id="episodes" class="my-3 ">
@@ -307,6 +326,13 @@
 </template>
 
 <script setup>
+const items = ref([
+    { title: 'View Website',
+       action: async(link) => {
+        await navigateTo(link,  {open: {target: '_blank'}})
+       } 
+     },
+  ])
 const params = useRoute().params
 import {
     MovieDb
@@ -359,7 +385,7 @@ const testcall = async (id) => {
                     content: `EVerything about kanoee`
                 }, ],
             })
-            //console.log(movie)
+            console.log(movie)
             getSeasons()
             if (movie.imdb_id) {
                 imdbInfo.value = `https://api.imdbapi.dev/titles/${movie.imdb_id}`
