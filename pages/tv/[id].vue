@@ -76,7 +76,7 @@
                 <div id="episodeGroup" v-if="episodeData">
                     <v-card theme="dark" flat height="400" id="epiCard">
                         <v-list lines="two">
-                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew,movieData)">
+                            <v-list-item v-for="(episodes, epikey) in episodeData.episodes" :key="episodes.id" :subtitle="episodes.overview || 'No description available for this episode.'" :title="`Episode ${epikey + 1} - ${episodes.name}`" @click="playEpisode(episodes.id, episodes.season_number, episodes.episode_number, episodes.crew,movieData, episodes)">
                                 <template v-slot:prepend>
                                     <v-avatar color="grey-lighten-1" :image="`https://image.tmdb.org/t/p/w100_and_h100_bestv2/${episodes.still_path}`" v-if="episodes.still_path"></v-avatar>
                                     <v-avatar icon="mdi-skull" v-else></v-avatar>
@@ -131,7 +131,7 @@
                         <v-row v-if="tvDialogData.season_number">
                             <v-col cols="10" md="10" sm="10">
                                 <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ tvDialogData.name }}</h2>
-                                <p class="text-body-2 py-1 text-truncate">Season: {{tvDialogData.season_number}} - Episode:{{ tvDialogData.episode_number }}</p>
+                                <p class="text-body-2 py-1 text-truncate">Season: {{tvDialogData.season_number}} Episode: {{tvDialogData.episode_number}}</p>
                             </v-col>
                             <v-col cols="2" md="2" class="text-right" sm="2">
                                 <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
@@ -139,8 +139,8 @@
                         </v-row>
                         <v-row v-else>
                             <v-col cols="10" md="10" sm="10">
-                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ episodeData.episodes[0].name }}</h2>
-                                <p class="text-body-2 py-1 text-truncate">Season: {{episodeData.episodes[0].season_number}} - Episode:{{ episodeData.episodes[0].episode_number }}</p>
+                                <h2 class="text-h4 font-weight-bold text-orange-darken-4 text-truncate">{{ tvDialogData.name }}</h2>
+                                <p class="text-body-2 py-1 text-truncate">Season: 1 - Episode: 1</p>
                             </v-col>
                             <v-col cols="2" md="2" class="text-right" sm="2">
                                 <v-btn :icon="showTV ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text"></v-btn>
@@ -389,12 +389,27 @@ const gettIMDBData = async () => {
     }
 
 }
-const playEpisode = (id, season, episode, crew,data) => {
+const playEpisode = (id, season, episode, crew,data, epiData) => {
     loaodingMovie.value = true
     ///embed/tv/{tmdbId}/{season}/{episode}
-    console.log(data)
-    tvDialogData.value = data
-    if (crew.length) {
+    console.log(epiData)
+    
+    if(epiData){
+        if (crew.length) {
+            tvDialogData.value = epiData
+        iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&nextEpisode=true`
+        setTimeout(() => {
+            movieDialog.value = true
+            loaodingMovie.value = false
+        }, 1000)
+    } else {
+        
+        errorPlayingEpisode.value = true
+        loaodingMovie.value = false
+    }
+    }else{
+        if (crew.length) {
+            tvDialogData.value = data
         iframsrc.value = `https://www.vidking.net/embed/tv/${params.id}/${season}/${episode}?autoPlay=true&color=e65100&nextEpisode=true`
         setTimeout(() => {
             movieDialog.value = true
@@ -404,6 +419,8 @@ const playEpisode = (id, season, episode, crew,data) => {
         errorPlayingEpisode.value = true
         loaodingMovie.value = false
     }
+    }
+    
 
 }
 const searchForEpisodes = async (seasonNumber) => {
