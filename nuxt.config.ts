@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     //...
   ],
    gtag: {
-    id: 'G-Q5BS9XMG33'
+    id: 'G-9BJ9NN48MQ'
   },
   vite: {
     vue: {
