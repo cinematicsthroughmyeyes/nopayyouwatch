@@ -15,19 +15,9 @@
                                 <v-icon icon="mdi-star" color="yellow" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.vote_average.toFixed(1) }}</span>
                             </p>
                         </div>
-                        <!-- <v-col cols='4' md="2" sm="12">
-                            <p class="text-body-2 text-white mx-0">
-                                <v-icon icon="mdi-calendar-range" color="white" class="mr-2"></v-icon> {{ movieData.first_air_date.substring(0,4) }}
-                            </p>
-                        </v-col>
-                        <v-col cols='4' md="2" sm="12">
-                            <p class="text-body-2 text-white mx-0">
-                                <v-icon icon="mdi-star" color="yellow" class="mr-2"></v-icon>{{ movieData.vote_average.toFixed(1) }}
-                            </p>
-                        </v-col> -->
                     </v-row>
                     <section class="mb-2">
-                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1">
+                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1 mb-1">
                             {{ mChip.name }}
                         </v-chip>
                     </section>

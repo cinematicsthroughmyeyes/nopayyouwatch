@@ -16,7 +16,7 @@
                         </div>
                     </v-row>
                     <section class="mb-3">
-                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1">
+                        <v-chip v-for="(mChip,mck) in movieData.genres" :key="mck" variant="flat" color="grey-darken-3" class="mr-1 mb-1">
                             {{ mChip.name }}
                         </v-chip>
                     </section>
