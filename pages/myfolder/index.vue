@@ -6,7 +6,7 @@
             <section id="folderDocs" class="mt-4">
 
                 <v-row>
-                    <v-col cols="4" md="3" sm="4" v-for="(doc,d) in arr" :key="d">
+                    <v-col cols="4" md="3" sm="3" v-for="(doc,d) in arr" :key="d">
                         <nuxt-link :to="doc.type === 'movie' ? `/movie/${doc.id}/` : `/tv/${doc.id}/`">
                             <v-card class="rounded-lg">
                                 <v-img :src="`https://image.tmdb.org/t/p/w500/${doc.poster_path}`">

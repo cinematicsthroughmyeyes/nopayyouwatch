@@ -32,7 +32,6 @@
     const popular = await moviedb.moviePopular({
         language: 'en-US'
     })
-    console.log(loadedpopmovies.value)
     if(!loadedpopmovies.value){
         if(popular.results.length > 0){
             for (let index = 0; index < 20; index++) {
