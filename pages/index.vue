@@ -1,9 +1,6 @@
 <template>
 <div>
     <v-main class="">
-        <!-- <div class="py-5">
-            <h1 class="text-h4 font-weight-bold">No Pay. You Watch.</h1>
-        </div> -->
 
         <v-card class="pa-8 d-flex justify-center bg-orange-darken-2 flex-wrap" min-height="400">
             <v-container class="text-center">

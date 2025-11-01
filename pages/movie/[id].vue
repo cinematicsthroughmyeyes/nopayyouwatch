@@ -278,6 +278,11 @@ import {
     MovieDb
 } from 'moviedb-promise'
 const moviedb = new MovieDb('73ae87f4ead565385079a234d8d1e7a6')
+import {
+    useMyFolderStore
+} from '~/stores/myfolder'
+
+const folderStore = useMyFolderStore()
 import LiteYouTubeEmbed from 'vue-lite-youtube-embed'
 import 'vue-lite-youtube-embed/style.css'
 const movieData = ref()
@@ -356,9 +361,10 @@ const gettMovieVideos = async () => {
 const playMovie = (id, data) => {
     loaodingMovie.value = true
     //https://player.videasy.net/
+    folderStore.addToFolder(data, 'movie')
     iframsrc.value = ``
     iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
-    console.log(data)
+    // console.log(data)
     movieDialogData.value = data
     setTimeout(() => {
         movieDialog.value = true
