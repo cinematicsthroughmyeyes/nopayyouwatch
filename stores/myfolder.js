@@ -24,7 +24,7 @@ export const useMyFolderStore = defineStore('myFolderStore', {
                 this.folderCount = folderArr.length
             }else{
                 const folder = JSON.parse(localStorage.getItem('myfolder'))
-                if(folder.length <= 20){
+                if(folder.length < 20){
                     let docFound = false
                 
                     for (let fd = 0; fd < folder.length; fd++) {
@@ -51,6 +51,23 @@ export const useMyFolderStore = defineStore('myFolderStore', {
                         localStorage.setItem('myfolder', JSON.stringify(newFolderArr))
                     }
                     this.folderCount = newFolderArr.length
+                }else{
+                    const folder = JSON.parse(localStorage.getItem('myfolder'))
+                    let newArr = folder;
+                    newArr = newArr.slice(1)
+                    newArr.push({
+                        id: data.id,
+                        poster_path: data.poster_path,
+                        title: data.title,
+                        overview: data.overview,
+                        tagline: data.tagline,
+                        runtime: data.runtime,
+                        vote_average: data.vote_average,
+                        type: type
+
+                    })
+                    localStorage.setItem('myfolder', JSON.stringify(newArr))
+                    this.folderCount = newArr.length
                 }
                 
             }
