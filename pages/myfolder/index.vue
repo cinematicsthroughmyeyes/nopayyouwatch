@@ -6,27 +6,43 @@
             <section id="folderDocs" class="mt-4">
 
                 <v-row>
-                    <v-col cols="4" md="3" sm="3" v-for="(doc,d) in arr" :key="d">
-                        <nuxt-link :to="doc.type === 'movie' ? `/movie/${doc.id}/` : `/tv/${doc.id}/`">
+                    <v-col cols="4" md="3" sm="3" v-for="(doc,d) in folderStore.myFolder" :key="d">
+                        
                             <v-card class="rounded-lg">
+                                <v-card-actions class="bg-grey-darken-4 pa-1">
+                                            <v-spacer></v-spacer>
+                                            <v-menu>
+                                                <template v-slot:activator="{ props }">
+                                                <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props"></v-btn>
+                                                </template>
+
+                                                <v-list>
+                                                <v-list-item
+                                                    v-for="(item, i) in cardItems"
+                                                    :key="i"
+                                                    :value="i"
+                                                    @click="item.action(doc, i)"
+                                                >
+                                                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                                </v-list-item>
+                                                </v-list>
+                                            </v-menu>
+                                          </v-card-actions>
+                                          <nuxt-link :to="doc.type === 'movie' ? `/movie/${doc.id}/` : `/tv/${doc.id}/`">
                                 <v-img :src="`https://image.tmdb.org/t/p/w500/${doc.poster_path}`">
                                     <v-card flat class="bg-transparent text-white text-decoration-none">
                                         <!-- {{ doc.vote_average.toFixed(1) }} -->
-                                          <v-card-actions style="background: rgba(0,0,0,.3);" class="pa-3">
+                                          <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-progress-circular
-                                            color="white"
-                                            :model-value="doc.vote_average.toFixed(1) * 10"
-                                            :size="50"
-                                            class="text-decoration-none" 
-                                            :width="5"
-                                            >{{ doc.vote_average.toFixed(1) }}</v-progress-circular>
+                                            <v-chip size="small" color="orange-darken-4" variant="flat">{{doc.vote_average.toFixed(1) }}</v-chip>
                                           </v-card-actions>
-                                         
+                                          
+                                          
                                     </v-card>
                                 </v-img>
+                                </nuxt-link>
                             </v-card>
-                        </nuxt-link>
+                        
                         
                     </v-col>
                 </v-row>
@@ -45,7 +61,14 @@
 } from '~/stores/myfolder'
 const arr = ref([])
 
+
 const folderStore = useMyFolderStore()
+const cardItems = ref([{
+    title: 'Remove',
+    action: (data, index) => {
+        folderStore.removeDocument(data, index)
+    }
+}])
 useHead({
         title: `My Folder | No Pay. You Watch.`,
         meta: [{
@@ -57,7 +80,7 @@ onMounted( () => {
     folderStore.getFolderDocs()
     arr.value = []
     if(folderStore.myFolder.length > 0){
-        arr.value = folderStore.myFolder.reverse()
+        arr.value = folderStore.myFolder
     }
     
 })

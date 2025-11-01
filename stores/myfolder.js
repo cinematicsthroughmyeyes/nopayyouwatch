@@ -83,7 +83,23 @@ export const useMyFolderStore = defineStore('myFolderStore', {
                 this.folderCount = this.myFolder.length
                 return this.myFolder
             }
-        }
+        },
+        async removeDocument(data, id){
+            if(localStorage.getItem('myfolder')){
+                const folderdocs =  JSON.parse(localStorage.getItem('myfolder'))
+                let newarr = []
+                this.myFolder = []
+                for (let f = 0; f < folderdocs.length; f++) {
+                    const e = folderdocs[f];
+                    if(e.id !== data.id){
+                        this.myFolder.push(e)
+                        newarr.push(e)
+                    }
+                }
+                localStorage.setItem('myfolder', JSON.stringify(newarr))
+                this.getFolderDocs()
+            }
+        },
     }
 
 })
