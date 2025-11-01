@@ -57,7 +57,7 @@ onMounted( () => {
     folderStore.getFolderDocs()
     arr.value = []
     if(folderStore.myFolder.length > 0){
-        arr.value = folderStore.myFolder
+        arr.value = folderStore.myFolder.reverse()
     }
     
 })

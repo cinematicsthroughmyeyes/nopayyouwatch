@@ -1,7 +1,7 @@
 <template>
     <div>   
         <v-app class="bg-grey-darken-4"> 
-            <v-app-bar :elevation="0" :color="color" class="px-3">
+            <v-app-bar :elevation="0" :color="color">
                 <template v-slot:append>
                 <v-btn  to="/" class="rounded-lg"><v-icon icon="mdi-home"></v-icon></v-btn>
                  <v-btn to="/myfolder/" class="rounded-lg"><v-icon icon="mdi-folder-home" class="mr-1"></v-icon> My Folder</v-btn>
