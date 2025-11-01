@@ -14,11 +14,11 @@
     
 </template>
 <script setup>
-const color = ref('transparent')
+const color = ref('orange-darken-4')
 onMounted( () => {
-    window.onscroll = () => {
-      changeColor();
-    };
+    // window.onscroll = () => {
+    //   changeColor();
+    // };
 })
 
 const changeColor = () => {
