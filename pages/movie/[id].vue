@@ -31,7 +31,7 @@
                         <v-btn color="orange-darken-4" class="text-white rounded-lg mr-2" v-else :disabled="true">
                             Movie Not Available
                         </v-btn>
-                        <ActionsWatchlist :data="movieData" />
+                        <ActionsWatchlist :data="movieData" type="movie" />
                         <!-- <v-fab color="grey-lighten-1" icon="mdi-plus" size="small" ></v-fab> -->
                         <v-fab color="grey-lighten-1" icon="mdi-group" mr-2 size="small" class="mr-2" @click="collectionSheet = true" v-if="collectionData"></v-fab>
                     </section>
@@ -281,8 +281,12 @@ const moviedb = new MovieDb('73ae87f4ead565385079a234d8d1e7a6')
 import {
     useMyFolderStore
 } from '~/stores/myfolder'
+import {
+    useMyWatchlistStore
+} from '~/stores/watchlist'
 
 const folderStore = useMyFolderStore()
+const watchlistStore = useMyWatchlistStore()
 import LiteYouTubeEmbed from 'vue-lite-youtube-embed'
 import 'vue-lite-youtube-embed/style.css'
 const movieData = ref()
@@ -301,6 +305,7 @@ const show = ref(false)
 onMounted(() => {
     testcall(params.id)
     gettMovieVideos()
+    watchlistStore.getByID(params.id)
 })
 const testcall = async (id) => {
     if (id) {
