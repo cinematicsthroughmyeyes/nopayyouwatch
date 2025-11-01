@@ -34,7 +34,7 @@
                                         <!-- {{ doc.vote_average.toFixed(1) }} -->
                                           <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-chip size="small" color="orange-darken-4" variant="flat">{{doc.vote_average.toFixed(1) }}</v-chip>
+                                            <v-chip size="small" color="orange-darken-4" variant="elevated"><v-icon icon="mdi-star"> </v-icon> {{doc.vote_average.toFixed(1) }} </v-chip>
                                           </v-card-actions>
                                           
                                           
@@ -52,6 +52,24 @@
                 <h1 class="text-h4 font-weight-bold py-3"> <v-icon icon="mdi-folder-home" size="sm"></v-icon> My Folder</h1>
                 <p class="text-body-2">Your folder is empty! Start watching!</p>
         </v-container>
+        <v-dialog v-model="confirmDelete" max-width="500">
+            
+                <v-card theme="dark" class="rounded-lg">
+                    <v-container>
+                    <v-card-title>
+                        <h4>Delete this document?</h4>
+                    </v-card-title>
+                    <v-card-text>
+                        <p class="text-body-1">This document will be deleted from your folder.</p>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn variant="text" text="Delete" @click="deleteDocument"></v-btn>
+                    </v-card-actions>
+                    </v-container>
+                </v-card>
+            
+        </v-dialog>
     </v-main>
 </template>
 
@@ -63,10 +81,15 @@ const arr = ref([])
 
 
 const folderStore = useMyFolderStore()
+const confirmDelete = ref(false)
+const deleteIndex = ref(0)
+const deleteData = ref()
 const cardItems = ref([{
     title: 'Remove',
     action: (data, index) => {
-        folderStore.removeDocument(data, index)
+        confirmDelete.value = true
+        deleteIndex.value = index
+        deleteData.value = data
     }
 }])
 useHead({
@@ -84,6 +107,10 @@ onMounted( () => {
     }
     
 })
+const deleteDocument = () => {
+    folderStore.removeDocument(deleteData.value, deleteIndex.value)
+    confirmDelete.value = false
+}
 </script>
 <style scoped>
 a{
