@@ -47,6 +47,13 @@
 
 const watchlistStore = useMyWatchlistStore()
 const arr = ref([])
+useHead({
+        title: `Watchlist | No Pay. You Watch.`,
+        meta: [{
+            name: 'description',
+            content: `View your watchlist.`
+        }, ],
+    })
 onMounted( () => {
     watchlistStore.getWatchlist()
     arr.value = []

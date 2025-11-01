@@ -46,7 +46,13 @@
 const arr = ref([])
 
 const folderStore = useMyFolderStore()
-
+useHead({
+        title: `My Folder | No Pay. You Watch.`,
+        meta: [{
+            name: 'description',
+            content: `View your Folder.`
+        }, ],
+    })
 onMounted( () => {
     folderStore.getFolderDocs()
     arr.value = []
