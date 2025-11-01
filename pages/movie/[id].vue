@@ -363,12 +363,12 @@ const playMovie = (id, data) => {
     //https://player.videasy.net/
     folderStore.addToFolder(data, 'movie')
     iframsrc.value = ``
-    //iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
+    iframsrc.value = `https://www.vidking.net/embed/movie/${id}?color=e65100&autoPlay=true`
     // console.log(data)
-    //movieDialogData.value = data
+    movieDialogData.value = data
     setTimeout(() => {
-        //movieDialog.value = true
-        //loaodingMovie.value = false
+        movieDialog.value = true
+        loaodingMovie.value = false
     }, 1000)
 
 }
