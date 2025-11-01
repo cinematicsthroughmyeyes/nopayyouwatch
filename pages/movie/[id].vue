@@ -10,7 +10,7 @@
                         <div class="py-3 px-3">
                             <p class="text-body-2 text-white mx-0">
                                 <v-icon icon="mdi-calendar-range" size="large" color="white" class="mr-1"></v-icon> <span class="mr-2">{{ movieData.release_date.substring(0,4) }}</span>
-                                <v-icon icon="mdi-clock-outline" color="white" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.runtime }} minutes</span>
+                                <v-icon icon="mdi-clock-outline" color="white" size="large" class="mr-1"></v-icon><span class="mr-2">{{ convertMinutes(movieData) }}</span>
                                 <v-icon icon="mdi-star" color="yellow" size="large" class="mr-1"></v-icon><span class="mr-2">{{ movieData.vote_average.toFixed(1) }}</span>
                             </p>
                         </div>
@@ -355,6 +355,15 @@ const gettMovieVideos = async () => {
             trailerVideos.value.push(r)
         }
     }
+}
+const convertMinutes = (data) => {
+    //console.log(data.runtime)
+    if(data){
+        const hours = Math.floor(Number(data.runtime) / 60);
+        const minutes = Number(data.runtime) % 60;
+        return `${hours}h ${minutes} minutes `
+    }
+    
 }
 
 //personMovieCredits
